@@ -1,0 +1,95 @@
+/* JavaScript animations */
+
+.hidden{
+
+    opacity:0;
+    transform:translateY(40px);
+    transition:1s;
+
+}
+
+
+.show{
+
+    opacity:1;
+    transform:translateY(0);
+
+}
+
+
+/* Mobile menu */
+
+.menu-btn{
+
+    display:none;
+    background:#00b7ff;
+    color:white;
+    border:none;
+    padding:10px 15px;
+    cursor:pointer;
+
+}
+
+
+@media(max-width:900px){
+
+.menu-btn{
+
+    display:block;
+
+}
+
+
+nav ul{
+
+    display:none;
+    flex-direction:column;
+    width:100%;
+    text-align:center;
+
+}
+
+
+nav ul.active{
+
+    display:flex;
+
+}
+
+}
+
+
+/* Back to top button */
+
+.top-btn{
+
+    position:fixed;
+    bottom:30px;
+    right:30px;
+
+    width:45px;
+    height:45px;
+
+    border-radius:50%;
+
+    background:#00b7ff;
+    color:white;
+
+    border:none;
+
+    font-size:25px;
+
+    cursor:pointer;
+
+    display:none;
+
+    z-index:999;
+
+}
+
+
+.top-btn:hover{
+
+    background:#062b45;
+
+}

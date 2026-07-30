@@ -1,0 +1,179 @@
+/* ============================
+   Pedro Weng Cybersecurity
+   script.js
+============================ */
+
+
+/* Smooth scrolling navigation */
+
+document.querySelectorAll('a[href^="#"]').forEach(link => {
+
+    link.addEventListener("click", function(e){
+
+        const target = document.querySelector(
+            this.getAttribute("href")
+        );
+
+        if(target){
+
+            e.preventDefault();
+
+            target.scrollIntoView({
+                behavior:"smooth"
+            });
+
+        }
+
+    });
+
+});
+
+
+/* Header shadow when scrolling */
+
+window.addEventListener("scroll", function(){
+
+    const header = document.querySelector("header");
+
+    if(window.scrollY > 50){
+
+        header.style.boxShadow =
+        "0 5px 20px rgba(0,0,0,0.3)";
+
+    }else{
+
+        header.style.boxShadow =
+        "0 2px 8px rgba(0,0,0,0.2)";
+
+    }
+
+});
+
+
+/* Scroll reveal animation */
+
+const sections = document.querySelectorAll("section");
+
+
+const observer = new IntersectionObserver(
+(entries)=>{
+
+entries.forEach(entry=>{
+
+    if(entry.isIntersecting){
+
+        entry.target.classList.add("show");
+
+    }
+
+});
+
+},
+{
+    threshold:0.15
+});
+
+
+sections.forEach(section=>{
+
+    section.classList.add("hidden");
+
+    observer.observe(section);
+
+});
+
+
+
+/* Mobile navigation menu */
+
+const nav = document.querySelector("nav ul");
+
+
+const menuButton = document.createElement("button");
+
+menuButton.innerHTML = "☰";
+
+menuButton.className = "menu-btn";
+
+
+document.querySelector("header .container")
+.insertBefore(
+    menuButton,
+    nav
+);
+
+
+
+menuButton.addEventListener(
+"click",
+()=>{
+
+    nav.classList.toggle("active");
+
+});
+
+
+
+/* Contact form message */
+
+<script>
+const forminit = new Forminit();
+const FORM_ID = "64ep4stw8gq";
+
+const form = document.getElementById("contact-form");
+
+form.addEventListener("submit", async (e) => {
+
+    e.preventDefault();
+
+    const status = document.getElementById("form-status");
+    status.style.color = "#ffffff";
+    status.textContent = "Sending...";
+
+    const formData = new FormData(form);
+
+    const { data, error } = await forminit.submit(FORM_ID, formData);
+
+    if (error) {
+        status.style.color = "#ff4d4f";
+        status.textContent = error.message;
+        return;
+    }
+
+    status.style.color = "#00c853";
+    status.textContent = "✅ Thank you! Your message has been sent successfully.";
+
+    form.reset();
+});
+</script>
+
+"click",
+
+()=>{
+
+window.scrollTo({
+
+top:0,
+
+behavior:"smooth"
+
+});
+
+});
+
+
+
+/* Current year automatically */
+
+const year =
+document.querySelector("footer p");
+
+
+if(year){
+
+year.innerHTML =
+"© " +
+new Date().getFullYear() +
+" Pedro Weng | Cybersecurity Consultant";
+
+}

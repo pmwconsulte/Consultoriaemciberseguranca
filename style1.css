@@ -1,0 +1,302 @@
+/* =====================================================
+   PART 4B
+   SERVICES • FEATURES • SKILLS • TIMELINE
+   PROJECTS • CERTIFICATIONS
+=====================================================*/
+
+/* ==========================
+   GENERAL CARDS
+========================== */
+
+.cards{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+    gap:30px;
+    margin-top:50px;
+}
+
+.card{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    padding:35px;
+    transition:var(--transition);
+    box-shadow:var(--shadow);
+    position:relative;
+    overflow:hidden;
+}
+
+.card::before{
+    content:"";
+    position:absolute;
+    left:0;
+    top:0;
+    width:5px;
+    height:100%;
+    background:linear-gradient(
+        var(--primary),
+        var(--secondary)
+    );
+}
+
+.card:hover{
+    transform:translateY(-10px);
+    border-color:var(--secondary);
+}
+
+.card i{
+    font-size:2.8rem;
+    color:var(--secondary);
+    margin-bottom:20px;
+}
+
+.card h3{
+    margin-bottom:15px;
+}
+
+.card p{
+    color:var(--gray);
+}
+
+/* ==========================
+   SERVICES
+========================== */
+
+#services{
+    background:var(--dark-light);
+}
+
+#services .card{
+    min-height:280px;
+}
+
+/* ==========================
+   WHY CHOOSE ME
+========================== */
+
+#why{
+    background:#0d1728;
+}
+
+.features{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+    gap:30px;
+    margin-top:50px;
+}
+
+.feature{
+    background:var(--card);
+    border-radius:var(--radius);
+    border:1px solid var(--border);
+    text-align:center;
+    padding:35px 25px;
+    transition:.35s;
+}
+
+.feature:hover{
+    transform:translateY(-8px);
+}
+
+.feature i{
+    font-size:3rem;
+    color:var(--secondary);
+    margin-bottom:20px;
+}
+
+.feature h3{
+    margin-bottom:15px;
+}
+
+/* ==========================
+   SKILLS
+========================== */
+
+.skills-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+    gap:30px;
+    margin-top:50px;
+}
+
+.skill-card{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    padding:30px;
+}
+
+.skill-card h3{
+    color:var(--secondary);
+    margin-bottom:20px;
+}
+
+.skill-card ul{
+    list-style:none;
+}
+
+.skill-card li{
+    padding:10px 0;
+    border-bottom:1px solid rgba(255,255,255,.08);
+    color:var(--gray);
+}
+
+.skill-card li:last-child{
+    border-bottom:none;
+}
+
+.skill-card li::before{
+    content:"✔";
+    color:#22c55e;
+    margin-right:10px;
+}
+
+/* ==========================
+   CERTIFICATIONS
+========================== */
+
+#certifications{
+    background:var(--dark-light);
+}
+
+#certifications .card{
+    text-align:center;
+}
+
+#certifications i{
+    font-size:3.2rem;
+}
+
+/* ==========================
+   TIMELINE
+========================== */
+
+.timeline{
+    position:relative;
+    margin-top:60px;
+    padding-left:45px;
+}
+
+.timeline::before{
+    content:"";
+    position:absolute;
+    left:12px;
+    top:0;
+    width:3px;
+    height:100%;
+    background:var(--secondary);
+}
+
+.timeline-item{
+    position:relative;
+    margin-bottom:50px;
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    padding:30px;
+}
+
+.timeline-item::before{
+    content:"";
+    position:absolute;
+    left:-41px;
+    top:32px;
+    width:20px;
+    height:20px;
+    background:var(--secondary);
+    border-radius:50%;
+    border:4px solid var(--dark);
+}
+
+.timeline-item span{
+    display:inline-block;
+    margin:10px 0;
+    color:var(--secondary);
+    font-weight:600;
+}
+
+/* ==========================
+   PROJECTS
+========================== */
+
+#projects{
+    background:#0d1728;
+}
+
+#projects .card{
+    display:flex;
+    flex-direction:column;
+}
+
+#projects .card h3{
+    color:var(--secondary);
+}
+
+#projects .card p{
+    margin-top:15px;
+}
+
+/* ==========================
+   ICON ANIMATION
+========================== */
+
+.card i,
+.feature i{
+    transition:.35s;
+}
+
+.card:hover i,
+.feature:hover i{
+    transform:scale(1.15) rotate(-5deg);
+}
+
+/* ==========================
+   SECTION HEADINGS
+========================== */
+
+section h2{
+    position:relative;
+    display:inline-block;
+    margin-bottom:20px;
+}
+
+section h2::after{
+    content:"";
+    display:block;
+    width:70px;
+    height:4px;
+    margin-top:12px;
+    border-radius:20px;
+    background:linear-gradient(
+        to right,
+        var(--primary),
+        var(--secondary)
+    );
+}
+
+/* ==========================
+   SCROLL OFFSET
+========================== */
+
+section{
+    scroll-margin-top:110px;
+}
+
+/* ==========================
+   SUBTLE BACKGROUND EFFECT
+========================== */
+
+body::before{
+    content:"";
+    position:fixed;
+    inset:0;
+    background:
+        radial-gradient(circle at top right,
+        rgba(0,212,255,.06),
+        transparent 40%),
+        radial-gradient(circle at bottom left,
+        rgba(13,110,253,.05),
+        transparent 45%);
+    pointer-events:none;
+    z-index:-1;
+}

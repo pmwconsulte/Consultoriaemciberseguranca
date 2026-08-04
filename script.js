@@ -215,85 +215,79 @@ observer.observe(element);
 
 
 /* ==========================
-   CONTACT FORM VALIDATION
+   CONTACT FORM - FORMINIT
 ========================== */
 
+const FORM_ID = "64ep4stw8gq";
 
-const form =
-document.getElementById(
-"contact-form"
-);
+const forminit = new Forminit();
 
+const form = document.getElementById("contact-form");
+const status = document.getElementById("form-status");
 
-const status =
-document.getElementById(
-"form-status"
-);
+if (form) {
 
+    form.addEventListener("submit", async function (e) {
 
+        e.preventDefault();
 
-if(form){
+        const name = document.getElementById("fullName").value.trim();
+        const email = document.getElementById("email").value.trim();
+        const message = document.getElementById("message").value.trim();
 
+        if (name === "") {
+            status.textContent = "Please enter your full name.";
+            status.style.color = "#ef4444";
+            return;
+        }
 
-form.addEventListener(
-"submit",
-function(e){
+        if (email === "") {
+            status.textContent = "Please enter your email address.";
+            status.style.color = "#ef4444";
+            return;
+        }
 
+        if (message === "") {
+            status.textContent = "Please enter your message.";
+            status.style.color = "#ef4444";
+            return;
+        }
 
-e.preventDefault();
+        status.textContent = "Sending...";
+        status.style.color = "#2563eb";
 
+        try {
 
+            const { error } = await forminit.submit(
+                FORM_ID,
+                new FormData(form)
+            );
 
-const name =
-document.getElementById(
-"fullName"
-).value;
+            if (error) {
+                status.textContent = error.message;
+                status.style.color = "#ef4444";
+                return;
+            }
 
+            status.textContent = "✅ Thank you! Your message has been sent successfully.";
+            status.style.color = "#22c55e";
 
+            form.reset();
 
-if(name.trim()===""){
+            setTimeout(() => {
+                status.textContent = "";
+            }, 5000);
 
+        } catch (err) {
 
-status.innerHTML =
-"Please enter your name.";
+            status.textContent = "An unexpected error occurred. Please try again.";
+            status.style.color = "#ef4444";
 
-status.style.color =
-"#ef4444";
+        }
 
-
-return;
-
-
-}
-
-
-
-status.innerHTML =
-"Thank you. Your message has been received.";
-
-status.style.color =
-"#22c55e";
-
-
-
-form.reset();
-
-
-
-setTimeout(()=>{
-
-
-status.innerHTML="";
-
-
-},5000);
-
-
-
-});
+    });
 
 }
-
 
 
 /* ==========================

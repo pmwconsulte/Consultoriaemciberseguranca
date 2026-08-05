@@ -211,7 +211,7 @@ header .container{
 
     align-items:center;
 
-    padding:10px 0;
+    padding:8px 0;
 
 }
 
@@ -236,11 +236,13 @@ header .container{
 
 .logo-img{
 
-    width:75px;
+    width:140px;
 
-    height:75px;
+    height:140px;
 
     object-fit:contain;
+
+    filter:drop-shadow(0 0 15px rgba(0,212,255,.35));
 
 }
 

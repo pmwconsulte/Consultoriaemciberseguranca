@@ -173,38 +173,46 @@ header .container{
 ========================== */
 
 .logo{
+
     display:flex;
+
     align-items:center;
+
     gap:15px;
+
 }
 
-.logo a{
-    display:flex;
-    align-items:center;
-}
 
 .logo-img{
-    width:70px;
-    height:70px;
+
+    width:65px;
+
+    height:65px;
+
     object-fit:contain;
-    transition:.3s ease;
+
 }
 
-.logo-img:hover{
-    transform:scale(1.05);
-}
 
 .logo-text h1{
+
+    color:var(--secondary);
+
+    font-size:1.6rem;
+
     margin:0;
-    font-size:1.7rem;
-    color:var(--white);
-    line-height:1.2;
+
 }
 
+
 .logo-text p{
-    margin:0;
+
     font-size:.85rem;
-    color:var(--secondary);
+
+    color:#8ea6c3;
+
+    margin:0;
+
 }
 
 /* ==========================

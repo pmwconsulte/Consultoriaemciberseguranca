@@ -1,8 +1,9 @@
 /* =====================================================
    PEDRO WENG
    Cybersecurity Portfolio
-   style.css
+   CLEAN STYLE.CSS
 ===================================================== */
+
 
 /* ==========================
    RESET
@@ -11,22 +12,31 @@
 *,
 *::before,
 *::after{
+
     margin:0;
     padding:0;
     box-sizing:border-box;
+
 }
+
 
 html{
+
     scroll-behavior:smooth;
+
 }
 
+
 body{
+
     font-family:'Poppins',sans-serif;
     background:#08111f;
     color:#f5f7fa;
     line-height:1.7;
     overflow-x:hidden;
+
 }
+
 
 /* ==========================
    VARIABLES
@@ -50,7 +60,8 @@ body{
 
     --border:#1f344e;
 
-    --shadow:0 15px 40px rgba(0,0,0,.35);
+    --shadow:
+    0 15px 40px rgba(0,0,0,.35);
 
     --radius:14px;
 
@@ -58,103 +69,140 @@ body{
 
 }
 
+
+
 /* ==========================
    TYPOGRAPHY
 ========================== */
 
-h1,h2,h3,h4{
+
+h1,
+h2,
+h3,
+h4{
+
     color:var(--white);
     font-weight:700;
+
 }
+
 
 h1{
+
     font-size:2rem;
+
 }
+
 
 h2{
+
     font-size:2.3rem;
     margin-bottom:20px;
+
 }
+
 
 h3{
+
     font-size:1.35rem;
+
 }
+
 
 p{
+
     color:var(--gray);
+
 }
+
 
 a{
+
     color:inherit;
     text-decoration:none;
+
 }
 
+
 img{
+
     display:block;
     max-width:100%;
+
 }
+
+
 
 /* ==========================
    CONTAINER
 ========================== */
 
+
 .container{
 
     width:min(1180px,92%);
-
     margin:auto;
 
 }
 
+
+
 /* ==========================
-   SECTION
+   SECTIONS
 ========================== */
+
 
 section{
 
     padding:90px 0;
+    scroll-margin-top:110px;
 
 }
+
 
 .section-title{
 
     text-align:center;
-
     margin-bottom:55px;
 
 }
 
+
 .section-title p{
 
     max-width:700px;
-
     margin:auto;
 
 }
+
+
 
 /* ==========================
    HEADER
 ========================== */
 
+
 header{
 
     position:fixed;
-
     top:0;
-
     left:0;
 
     width:100%;
 
-    background:rgba(8,17,31,.95);
+    background:
+    rgba(8,17,31,.95);
 
     backdrop-filter:blur(15px);
 
-    border-bottom:1px solid rgba(255,255,255,.08);
+    border-bottom:
+    1px solid rgba(255,255,255,.08);
 
     z-index:999;
 
 }
+
+
 
 header .container{
 
@@ -164,13 +212,16 @@ header .container{
 
     align-items:center;
 
-    padding:12px 0;
+    padding:8px 0;
 
 }
+
+
 
 /* ==========================
    LOGO
 ========================== */
+
 
 .logo{
 
@@ -178,33 +229,22 @@ header .container{
 
     align-items:center;
 
-    gap:20px;
+    gap:15px;
 
 }
 
 
-.logo-text h1{
 
-    font-size:1.8rem;
+.logo img{
 
-}
+    width:75px;
 
-
-.logo-text p{
-
-    font-size:.9rem;
-
-}
-
-.logo-img{
-
-    width:100px;
-
-    height:100px;
+    height:75px;
 
     object-fit:contain;
 
 }
+
 
 
 .logo-text h1{
@@ -218,19 +258,23 @@ header .container{
 }
 
 
+
 .logo-text p{
 
-    font-size:.85rem;
-
     color:#8ea6c3;
+
+    font-size:.85rem;
 
     margin:0;
 
 }
 
+
+
 /* ==========================
    NAVIGATION
 ========================== */
+
 
 nav ul{
 
@@ -242,15 +286,19 @@ nav ul{
 
 }
 
+
+
 nav a{
 
     font-weight:500;
 
-    transition:var(--transition);
-
     position:relative;
 
+    transition:var(--transition);
+
 }
+
+
 
 nav a::after{
 
@@ -272,11 +320,15 @@ nav a::after{
 
 }
 
+
+
 nav a:hover{
 
     color:var(--secondary);
 
 }
+
+
 
 nav a:hover::after{
 

@@ -1204,6 +1204,8 @@ Let's discuss your cybersecurity requirements.
 
 <div class="contact-grid">
 
+<div class="contact-form">
+
 
 
 
@@ -1214,104 +1216,79 @@ Let's discuss your cybersecurity requirements.
 
 <form id="contact-form">
 
-<input type="text"
+<label for="fullName">
+Full Name
+</label>
+
+<input
+type="text"
 id="fullName"
 name="fi-sender-fullName"
+placeholder="Your full name"
 required>
 
-<input type="email"
+<label for="email">
+Email
+</label>
+
+<input
+type="email"
 id="email"
 name="fi-sender-email"
+placeholder="name@company.com"
 required>
 
-<input type="text"
-id="company"
-name="fi-sender-company">
+<label for="company">
+Company
+</label>
 
+<input
+type="text"
+id="company"
+name="fi-sender-company"
+placeholder="Company">
 
 <label for="subject">
 Subject
 </label>
 
+<select
+id="subject"
+name="fi-select-subject">
 
-<select id="subject" name="subject">
-
-
-<option>
-General Inquiry
-</option>
-
-<option>
-Cybersecurity Consulting
-</option>
-
-<option>
-SOC Services
-</option>
-
-<option>
-SIEM Engineering
-</option>
-
-<option>
-Incident Response
-</option>
-
-<option>
-Risk Assessment
-</option>
-
-<option>
-Cloud Security
-</option>
-
-<option>
-Training
-</option>
-
+<option>General Inquiry</option>
+<option>Cybersecurity Consulting</option>
+<option>SOC Services</option>
+<option>SIEM Engineering</option>
+<option>Incident Response</option>
+<option>Risk Assessment</option>
+<option>Cloud Security</option>
+<option>Training</option>
 
 </select>
-
-
-
-
-
 
 <label for="message">
 Message
 </label>
 
-
 <textarea
 id="message"
-name="message"
+name="fi-text-message"
 rows="6"
 placeholder="Tell me about your project..."
 required></textarea>
 
-
-
-
 <button
 type="submit"
 class="btn">
-
 Send Message
-
 </button>
-
-
 
 <p id="form-status"></p>
 
-
-
 </form>
 
-
-
 </div>
-
 
 
 

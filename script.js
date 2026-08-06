@@ -220,76 +220,66 @@ observer.observe(element);
 
 const FORM_ID = "64ep4stw8gq";
 
-const forminit = new Forminit();
+if (typeof Forminit === "undefined") {
+    console.error("FormInit SDK is not loaded.");
+} else {
 
-const form = document.getElementById("contact-form");
-const status = document.getElementById("form-status");
+    const forminit = new Forminit();
 
-if (form) {
+    const form = document.getElementById("contact-form");
+    const status = document.getElementById("form-status");
 
-    form.addEventListener("submit", async function (e) {
+    if (form) {
 
-        e.preventDefault();
+        form.addEventListener("submit", async (e) => {
 
-        const name = document.getElementById("fullName").value.trim();
-        const email = document.getElementById("email").value.trim();
-        const message = document.getElementById("message").value.trim();
+            e.preventDefault();
 
-        if (name === "") {
-            status.textContent = "Please enter your full name.";
-            status.style.color = "#ef4444";
-            return;
-        }
+            status.textContent = "Sending...";
+            status.style.color = "#2563eb";
 
-        if (email === "") {
-            status.textContent = "Please enter your email address.";
-            status.style.color = "#ef4444";
-            return;
-        }
+            const formData = new FormData(form);
 
-        if (message === "") {
-            status.textContent = "Please enter your message.";
-            status.style.color = "#ef4444";
-            return;
-        }
-
-        status.textContent = "Sending...";
-        status.style.color = "#2563eb";
-
-        try {
-
-            const { error } = await forminit.submit(
-                FORM_ID,
-                new FormData(form)
-            );
-
-            if (error) {
-                status.textContent = error.message;
-                status.style.color = "#ef4444";
-                return;
+            // Debug - remove after testing
+            console.log("Form data:");
+            for (const [key, value] of formData.entries()) {
+                console.log(`${key}: ${value}`);
             }
 
-            status.textContent = "✅ Thank you! Your message has been sent successfully.";
-            status.style.color = "#22c55e";
+            try {
 
-            form.reset();
+                const response = await forminit.submit(FORM_ID, formData);
 
-            setTimeout(() => {
-                status.textContent = "";
-            }, 5000);
+                if (response.error) {
+                    status.textContent = response.error.message;
+                    status.style.color = "#ef4444";
+                    console.error(response.error);
+                    return;
+                }
 
-        } catch (err) {
+                status.textContent = "✅ Message sent successfully!";
+                status.style.color = "#22c55e";
 
-            status.textContent = "An unexpected error occurred. Please try again.";
-            status.style.color = "#ef4444";
+                form.reset();
 
-        }
+                setTimeout(() => {
+                    status.textContent = "";
+                }, 5000);
 
-    });
+            } catch (err) {
+
+                console.error(err);
+
+                status.textContent = "❌ Failed to send the message.";
+                status.style.color = "#ef4444";
+
+            }
+
+        });
+
+    }
 
 }
-
-
 /* ==========================
    CURRENT YEAR FOOTER
 ========================== */

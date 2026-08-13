@@ -5,53 +5,130 @@
 
 document.addEventListener("DOMContentLoaded", () => {
 
+    /* =================================================
+       ELEMENTS
+    ================================================= */
+
+    const header = document.getElementById("header");
+    const menuToggle = document.getElementById("menu-toggle");
+    const nav = document.getElementById("nav");
+
+    const backToTop = document.getElementById("back-to-top");
+
+    const contactForm = document.getElementById("contact-form");
+    const formStatus = document.getElementById("form-status");
+    const submitButton = document.getElementById("submit-button");
+
+    const videoModal = document.getElementById("video-modal");
+    const videoPlayer = document.getElementById("video-player");
+    const videoTitle = document.getElementById("video-modal-title");
+    const closeVideo = document.getElementById("video-modal-close");
+
+    const playButtons = document.querySelectorAll(".play-button");
+
+    const filters = document.querySelectorAll(".video-filter");
+    const videoCards = document.querySelectorAll(".video-card");
+
 
     /* =================================================
        MOBILE NAVIGATION
     ================================================= */
 
-    const menuToggle =
-        document.getElementById("menu-toggle");
+    function closeMobileMenu() {
 
-    const nav =
-        document.getElementById("nav");
+        if (!nav || !menuToggle) return;
+
+        nav.classList.remove("active");
+
+        menuToggle.setAttribute(
+            "aria-expanded",
+            "false"
+        );
+
+        menuToggle.setAttribute(
+            "aria-label",
+            "Open navigation menu"
+        );
+
+        menuToggle.innerHTML =
+            '<i class="fa-solid fa-bars"></i>';
+    }
+
+
+    function openMobileMenu() {
+
+        if (!nav || !menuToggle) return;
+
+        nav.classList.add("active");
+
+        menuToggle.setAttribute(
+            "aria-expanded",
+            "true"
+        );
+
+        menuToggle.setAttribute(
+            "aria-label",
+            "Close navigation menu"
+        );
+
+        menuToggle.innerHTML =
+            '<i class="fa-solid fa-xmark"></i>';
+    }
+
 
     if (menuToggle && nav) {
 
         menuToggle.addEventListener("click", () => {
 
             const isOpen =
-                nav.classList.toggle("active");
+                nav.classList.contains("active");
 
-            menuToggle.setAttribute(
-                "aria-expanded",
-                isOpen
-            );
-
-            menuToggle.innerHTML = isOpen
-                ? '<i class="fa-solid fa-xmark"></i>'
-                : '<i class="fa-solid fa-bars"></i>';
+            if (isOpen) {
+                closeMobileMenu();
+            } else {
+                openMobileMenu();
+            }
 
         });
 
-
-        /* Close menu after clicking link */
 
         nav.querySelectorAll("a").forEach(link => {
 
             link.addEventListener("click", () => {
 
-                nav.classList.remove("active");
-
-                menuToggle.setAttribute(
-                    "aria-expanded",
-                    "false"
-                );
-
-                menuToggle.innerHTML =
-                    '<i class="fa-solid fa-bars"></i>';
+                closeMobileMenu();
 
             });
+
+        });
+
+
+        /* Close menu when clicking outside */
+
+        document.addEventListener("click", event => {
+
+            if (
+                nav.classList.contains("active") &&
+                !nav.contains(event.target) &&
+                !menuToggle.contains(event.target)
+            ) {
+
+                closeMobileMenu();
+
+            }
+
+        });
+
+
+        /* Close menu with Escape */
+
+        document.addEventListener("keydown", event => {
+
+            if (event.key === "Escape") {
+
+                closeMobileMenu();
+
+            }
 
         });
 
@@ -61,9 +138,6 @@ document.addEventListener("DOMContentLoaded", () => {
     /* =================================================
        HEADER SCROLL EFFECT
     ================================================= */
-
-    const header =
-        document.getElementById("header");
 
     function handleHeader() {
 
@@ -81,9 +155,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
     }
 
+
     window.addEventListener(
         "scroll",
-        handleHeader
+        handleHeader,
+        { passive: true }
     );
 
     handleHeader();
@@ -96,53 +172,59 @@ document.addEventListener("DOMContentLoaded", () => {
     const revealElements =
         document.querySelectorAll(".reveal");
 
-    const revealObserver =
-        new IntersectionObserver(
-            (entries, observer) => {
 
-                entries.forEach(entry => {
+    if ("IntersectionObserver" in window) {
 
-                    if (entry.isIntersecting) {
+        const revealObserver =
+            new IntersectionObserver(
+                (entries, observer) => {
 
-                        entry.target.classList.add(
-                            "visible"
-                        );
+                    entries.forEach(entry => {
 
-                        observer.unobserve(
-                            entry.target
-                        );
+                        if (entry.isIntersecting) {
 
-                    }
+                            entry.target.classList.add(
+                                "visible"
+                            );
 
-                });
+                            observer.unobserve(
+                                entry.target
+                            );
 
-            },
-            {
-                threshold: 0.12
-            }
-        );
+                        }
 
-    revealElements.forEach(element => {
+                    });
 
-        revealObserver.observe(element);
+                },
+                {
+                    threshold: 0.12,
+                    rootMargin: "0px 0px -50px 0px"
+                }
+            );
 
-    });
+
+        revealElements.forEach(element => {
+
+            revealObserver.observe(element);
+
+        });
+
+    } else {
+
+        /* Fallback for older browsers */
+
+        revealElements.forEach(element => {
+
+            element.classList.add("visible");
+
+        });
+
+    }
 
 
     /* =================================================
        VIDEO FILTERING
     ================================================= */
-
-    const filters =
-        document.querySelectorAll(
-            ".video-filter"
-        );
-
-    const videoCards =
-        document.querySelectorAll(
-            ".video-card"
-        );
-
 
     filters.forEach(filter => {
 
@@ -152,18 +234,29 @@ document.addEventListener("DOMContentLoaded", () => {
                 filter.dataset.filter;
 
 
-            /* Active button */
+            /* Active filter */
 
             filters.forEach(button => {
 
                 button.classList.remove("active");
 
+                button.setAttribute(
+                    "aria-pressed",
+                    "false"
+                );
+
             });
+
 
             filter.classList.add("active");
 
+            filter.setAttribute(
+                "aria-pressed",
+                "true"
+            );
 
-            /* Filter cards */
+
+            /* Filter video cards */
 
             videoCards.forEach(card => {
 
@@ -171,16 +264,42 @@ document.addEventListener("DOMContentLoaded", () => {
                     card.dataset.category;
 
 
-                if (
+                const shouldShow =
                     selectedCategory === "all" ||
-                    cardCategory === selectedCategory
-                ) {
+                    cardCategory === selectedCategory;
+
+
+                if (shouldShow) {
 
                     card.style.display = "";
 
+                    requestAnimationFrame(() => {
+
+                        card.classList.remove(
+                            "video-hidden"
+                        );
+
+                    });
+
                 } else {
 
-                    card.style.display = "none";
+                    card.classList.add(
+                        "video-hidden"
+                    );
+
+                    setTimeout(() => {
+
+                        if (
+                            card.classList.contains(
+                                "video-hidden"
+                            )
+                        ) {
+
+                            card.style.display = "none";
+
+                        }
+
+                    }, 250);
 
                 }
 
@@ -195,36 +314,19 @@ document.addEventListener("DOMContentLoaded", () => {
        VIDEO MODAL
     ================================================= */
 
-    const videoModal =
-        document.getElementById("video-modal");
-
-    const videoPlayer =
-        document.getElementById("video-player");
-
-    const videoTitle =
-        document.getElementById(
-            "video-modal-title"
-        );
-
-    const closeVideo =
-        document.getElementById(
-            "video-modal-close"
-        );
-
-    const playButtons =
-        document.querySelectorAll(
-            ".play-button"
-        );
-
-
     function openVideo(videoId, title) {
 
-        if (!videoModal || !videoPlayer) {
+        if (
+            !videoModal ||
+            !videoPlayer
+        ) {
+
             return;
+
         }
 
 
-        /* Don't open empty placeholder */
+        /* Validate video ID */
 
         if (
             !videoId ||
@@ -232,7 +334,7 @@ document.addEventListener("DOMContentLoaded", () => {
         ) {
 
             alert(
-                "Please add your YouTube video ID in the HTML first."
+                "Please add a valid YouTube video ID in the HTML."
             );
 
             return;
@@ -240,10 +342,24 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
 
-        videoTitle.textContent = title;
+        if (videoTitle) {
+
+            videoTitle.textContent =
+                title || "Cybersecurity Training";
+
+        }
+
+
+        /*
+           YouTube embed URL
+
+           Example:
+           https://www.youtube.com/embed/VIDEO_ID
+        */
 
         videoPlayer.src =
-            `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0`;
+            `https://www.youtube.com/embed/${encodeURIComponent(videoId)}?autoplay=1&rel=0`;
+
 
         videoModal.classList.add("active");
 
@@ -252,7 +368,27 @@ document.addEventListener("DOMContentLoaded", () => {
             "false"
         );
 
-        document.body.style.overflow = "hidden";
+
+        document.body.classList.add(
+            "video-open"
+        );
+
+
+        document.body.style.overflow =
+            "hidden";
+
+
+        /* Focus close button */
+
+        if (closeVideo) {
+
+            setTimeout(() => {
+
+                closeVideo.focus();
+
+            }, 100);
+
+        }
 
     }
 
@@ -261,19 +397,41 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (!videoModal) return;
 
-        videoModal.classList.remove("active");
+
+        videoModal.classList.remove(
+            "active"
+        );
 
         videoModal.setAttribute(
             "aria-hidden",
             "true"
         );
 
-        videoPlayer.src = "";
 
-        document.body.style.overflow = "";
+        /*
+           Removing the iframe source stops
+           the YouTube video/audio.
+        */
+
+        if (videoPlayer) {
+
+            videoPlayer.src = "";
+
+        }
+
+
+        document.body.classList.remove(
+            "video-open"
+        );
+
+
+        document.body.style.overflow =
+            "";
 
     }
 
+
+    /* Play buttons */
 
     playButtons.forEach(button => {
 
@@ -295,6 +453,8 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
 
+    /* Close button */
+
     if (closeVideo) {
 
         closeVideo.addEventListener(
@@ -304,6 +464,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     }
 
+
+    /* Click modal background */
 
     if (videoModal) {
 
@@ -325,14 +487,16 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
 
-    /* Escape key closes video */
+    /* Escape closes video */
 
     document.addEventListener(
         "keydown",
         event => {
 
             if (
-                event.key === "Escape"
+                event.key === "Escape" &&
+                videoModal &&
+                videoModal.classList.contains("active")
             ) {
 
                 closeVideoModal();
@@ -347,15 +511,10 @@ document.addEventListener("DOMContentLoaded", () => {
        BACK TO TOP
     ================================================= */
 
-    const backToTop =
-        document.getElementById(
-            "back-to-top"
-        );
-
-
     function handleBackToTop() {
 
         if (!backToTop) return;
+
 
         if (window.scrollY > 600) {
 
@@ -372,8 +531,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
     window.addEventListener(
         "scroll",
-        handleBackToTop
+        handleBackToTop,
+        { passive: true }
     );
+
+
+    handleBackToTop();
 
 
     if (backToTop) {
@@ -397,29 +560,17 @@ document.addEventListener("DOMContentLoaded", () => {
        CONTACT FORM - FORMINIT
     ================================================= */
 
-    const contactForm =
-        document.getElementById(
-            "contact-form"
-        );
-
-    const formStatus =
-        document.getElementById(
-            "form-status"
-        );
-
-    const submitButton =
-        document.getElementById(
-            "submit-button"
-        );
-
-
     /*
        IMPORTANT:
-       Replace this with your real Forminit Form ID.
+
+       Replace this with your REAL Forminit Form ID.
+
+       Example:
+       const FORMINIT_FORM_ID = "abc123xyz";
     */
 
     const FORMINIT_FORM_ID =
-        "64ep4stw8gq";
+        "YOUR_REAL_FORM_ID";
 
 
     if (
@@ -438,18 +589,28 @@ document.addEventListener("DOMContentLoaded", () => {
                 event.preventDefault();
 
 
-                /* Check Form ID */
+                /* Validate Form ID */
 
                 if (
+                    !FORMINIT_FORM_ID ||
                     FORMINIT_FORM_ID ===
-                    "64ep4stw8gq"
+                    "YOUR_REAL_FORM_ID"
                 ) {
 
-                    formStatus.textContent =
-                        "Please configure your Forminit Form ID in script.js.";
+                    console.error(
+                        "Forminit Form ID has not been configured."
+                    );
 
-                    formStatus.className =
-                        "form-status status-error";
+
+                    if (formStatus) {
+
+                        formStatus.textContent =
+                            "Contact form is not configured yet. Please add your Forminit Form ID.";
+
+                        formStatus.className =
+                            "form-status status-error";
+
+                    }
 
                     return;
 
@@ -458,18 +619,27 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 /* Loading state */
 
-                submitButton.disabled = true;
+                if (submitButton) {
 
-                submitButton.innerHTML = `
-                    <span>Sending...</span>
-                    <i class="fa-solid fa-spinner fa-spin"></i>
-                `;
+                    submitButton.disabled = true;
 
-                formStatus.textContent =
-                    "Sending your message...";
+                    submitButton.innerHTML = `
+                        <span>Sending...</span>
+                        <i class="fa-solid fa-spinner fa-spin"></i>
+                    `;
 
-                formStatus.className =
-                    "form-status status-loading";
+                }
+
+
+                if (formStatus) {
+
+                    formStatus.textContent =
+                        "Sending your message...";
+
+                    formStatus.className =
+                        "form-status status-loading";
+
+                }
 
 
                 try {
@@ -480,9 +650,14 @@ document.addEventListener("DOMContentLoaded", () => {
                         );
 
 
+                    /*
+                       Forminit expects the Form ID
+                       as a string.
+                    */
+
                     const result =
                         await forminit.submit(
-                            64ep4stw8gq,
+                            FORMINIT_FORM_ID,
                             formData
                         );
 
@@ -505,11 +680,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
                     /* Success */
 
-                    formStatus.textContent =
-                        "Message sent successfully! Thank you for contacting me.";
+                    if (formStatus) {
 
-                    formStatus.className =
-                        "form-status status-success";
+                        formStatus.textContent =
+                            "Message sent successfully! Thank you for contacting me.";
+
+                        formStatus.className =
+                            "form-status status-success";
+
+                    }
 
 
                     contactForm.reset();
@@ -523,34 +702,47 @@ document.addEventListener("DOMContentLoaded", () => {
                     );
 
 
-                    formStatus.textContent =
-                        error.message ||
-                        "Something went wrong. Please try again.";
+                    if (formStatus) {
 
-                    formStatus.className =
-                        "form-status status-error";
+                        formStatus.textContent =
+                            error.message ||
+                            "Something went wrong. Please try again.";
 
+                        formStatus.className =
+                            "form-status status-error";
+
+                    }
 
                 } finally {
 
-                    submitButton.disabled =
-                        false;
+                    if (submitButton) {
 
-                    submitButton.innerHTML = `
-                        <span>Send Message</span>
-                        <i class="fa-solid fa-paper-plane"></i>
-                    `;
+                        submitButton.disabled =
+                            false;
+
+                        submitButton.innerHTML = `
+                            <span>Send Message</span>
+                            <i class="fa-solid fa-paper-plane"></i>
+                        `;
+
+                    }
 
                 }
 
             }
         );
 
+    } else if (contactForm) {
+
+        console.error(
+            "Forminit SDK was not loaded."
+        );
+
     }
 
 
     /* =================================================
-       SMOOTH SCROLL FOR ANCHOR LINKS
+       SMOOTH SCROLL
     ================================================= */
 
     document
@@ -564,6 +756,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     const targetId =
                         anchor.getAttribute("href");
 
+
                     if (
                         !targetId ||
                         targetId === "#"
@@ -573,30 +766,43 @@ document.addEventListener("DOMContentLoaded", () => {
 
                     }
 
+
                     const target =
                         document.querySelector(
                             targetId
                         );
 
+
                     if (!target) {
+
                         return;
+
                     }
 
+
                     event.preventDefault();
+
 
                     const headerHeight =
                         header
                             ? header.offsetHeight
                             : 0;
 
+
                     const targetPosition =
-                        target.offsetTop -
+                        target.getBoundingClientRect()
+                            .top +
+                        window.scrollY -
                         headerHeight;
+
 
                     window.scrollTo({
 
                         top:
-                            targetPosition,
+                            Math.max(
+                                0,
+                                targetPosition
+                            ),
 
                         behavior:
                             "smooth"
@@ -607,5 +813,55 @@ document.addEventListener("DOMContentLoaded", () => {
             );
 
         });
+
+
+    /* =================================================
+       INITIALIZE VIDEO FILTER ACCESSIBILITY
+    ================================================= */
+
+    filters.forEach(filter => {
+
+        filter.setAttribute(
+            "aria-pressed",
+            filter.classList.contains("active")
+                ? "true"
+                : "false"
+        );
+
+    });
+
+
+    /* =================================================
+       RESIZE HANDLING
+    ================================================= */
+
+    window.addEventListener(
+        "resize",
+        () => {
+
+            if (
+                window.innerWidth > 900
+            ) {
+
+                closeMobileMenu();
+
+            }
+
+        }
+    );
+
+
+    /* =================================================
+       CONSOLE MESSAGE
+    ================================================= */
+
+    console.log(
+        "%cPedro Weng Cybersecurity Website",
+        "color:#00e5ff;font-size:16px;font-weight:bold;"
+    );
+
+    console.log(
+        "Website JavaScript initialized successfully."
+    );
 
 });

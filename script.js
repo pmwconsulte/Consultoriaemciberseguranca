@@ -36,7 +36,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function closeMobileMenu() {
 
-        if (!nav || !menuToggle) return;
+        if (!nav || !menuToggle) {
+            return;
+        }
 
         nav.classList.remove("active");
 
@@ -57,7 +59,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function openMobileMenu() {
 
-        if (!nav || !menuToggle) return;
+        if (!nav || !menuToggle) {
+            return;
+        }
 
         nav.classList.add("active");
 
@@ -78,7 +82,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (menuToggle && nav) {
 
-        menuToggle.addEventListener("click", () => {
+        menuToggle.addEventListener("click", (event) => {
+
+            event.stopPropagation();
 
             const isOpen =
                 nav.classList.contains("active");
@@ -141,7 +147,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function handleHeader() {
 
-        if (!header) return;
+        if (!header) {
+            return;
+        }
 
         if (window.scrollY > 50) {
 
@@ -211,8 +219,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     } else {
 
-        /* Fallback for older browsers */
-
         revealElements.forEach(element => {
 
             element.classList.add("visible");
@@ -262,7 +268,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 const cardCategory =
                     card.dataset.category;
-
 
                 const shouldShow =
                     selectedCategory === "all" ||
@@ -316,13 +321,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function openVideo(videoId, title) {
 
-        if (
-            !videoModal ||
-            !videoPlayer
-        ) {
-
+        if (!videoModal || !videoPlayer) {
             return;
-
         }
 
 
@@ -333,8 +333,8 @@ document.addEventListener("DOMContentLoaded", () => {
             videoId.includes("YOUR_VIDEO_ID")
         ) {
 
-            alert(
-                "Please add a valid YouTube video ID in the HTML."
+            console.warn(
+                "Please add a valid YouTube video ID."
             );
 
             return;
@@ -352,9 +352,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
         /*
            YouTube embed URL
-
-           Example:
-           https://www.youtube.com/embed/VIDEO_ID
         */
 
         videoPlayer.src =
@@ -373,9 +370,7 @@ document.addEventListener("DOMContentLoaded", () => {
             "video-open"
         );
 
-
-        document.body.style.overflow =
-            "hidden";
+        document.body.style.overflow = "hidden";
 
 
         /* Focus close button */
@@ -395,7 +390,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function closeVideoModal() {
 
-        if (!videoModal) return;
+        if (!videoModal) {
+            return;
+        }
 
 
         videoModal.classList.remove(
@@ -409,8 +406,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
         /*
-           Removing the iframe source stops
-           the YouTube video/audio.
+           Removing iframe source stops
+           YouTube video/audio.
         */
 
         if (videoPlayer) {
@@ -424,9 +421,7 @@ document.addEventListener("DOMContentLoaded", () => {
             "video-open"
         );
 
-
-        document.body.style.overflow =
-            "";
+        document.body.style.overflow = "";
 
     }
 
@@ -513,7 +508,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function handleBackToTop() {
 
-        if (!backToTop) return;
+        if (!backToTop) {
+            return;
+        }
 
 
         if (window.scrollY > 600) {
@@ -534,7 +531,6 @@ document.addEventListener("DOMContentLoaded", () => {
         handleBackToTop,
         { passive: true }
     );
-
 
     handleBackToTop();
 
@@ -562,7 +558,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     /*
        IMPORTANT:
-
        Replace this with your REAL Forminit Form ID.
 
        Example:
@@ -650,11 +645,6 @@ document.addEventListener("DOMContentLoaded", () => {
                         );
 
 
-                    /*
-                       Forminit expects the Form ID
-                       as a string.
-                    */
-
                     const result =
                         await forminit.submit(
                             FORMINIT_FORM_ID,
@@ -676,6 +666,12 @@ document.addEventListener("DOMContentLoaded", () => {
                         );
 
                     }
+
+
+                    console.log(
+                        "Form submitted:",
+                        data
+                    );
 
 
                     /* Success */
@@ -839,9 +835,12 @@ document.addEventListener("DOMContentLoaded", () => {
         "resize",
         () => {
 
-            if (
-                window.innerWidth > 900
-            ) {
+            /*
+               CSS mobile menu breakpoint:
+               max-width: 950px
+            */
+
+            if (window.innerWidth > 950) {
 
                 closeMobileMenu();
 

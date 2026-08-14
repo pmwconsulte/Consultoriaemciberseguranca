@@ -1,49 +1,28 @@
 /* =====================================================
    PEDRO WENG CYBERSECURITY WEBSITE
-   MAIN JAVASCRIPT
+   JAVASCRIPT
 ===================================================== */
 
 document.addEventListener("DOMContentLoaded", () => {
-
-    "use strict";
-
 
     /* =================================================
        ELEMENTS
     ================================================= */
 
-    const header =
-        document.getElementById("header");
+    const header = document.getElementById("header");
+    const menuToggle = document.getElementById("menu-toggle");
+    const nav = document.getElementById("nav");
 
-    const menuToggle =
-        document.getElementById("menu-toggle");
+    const backToTop = document.getElementById("back-to-top");
 
-    const nav =
-        document.getElementById("nav");
+    const contactForm = document.getElementById("contact-form");
+    const formStatus = document.getElementById("form-status");
+    const submitButton = document.getElementById("submit-button");
 
-    const backToTop =
-        document.getElementById("back-to-top");
-
-    const contactForm =
-        document.getElementById("contact-form");
-
-    const formStatus =
-        document.getElementById("form-status");
-
-    const submitButton =
-        document.getElementById("submit-button");
-
-    const videoModal =
-        document.getElementById("video-modal");
-
-    const videoPlayer =
-        document.getElementById("video-player");
-
-    const videoTitle =
-        document.getElementById("video-modal-title");
-
-    const closeVideo =
-        document.getElementById("video-modal-close");
+    const videoModal = document.getElementById("video-modal");
+    const videoPlayer = document.getElementById("video-player");
+    const videoTitle = document.getElementById("video-modal-title");
+    const closeVideo = document.getElementById("video-modal-close");
 
     const playButtons =
         document.querySelectorAll(".play-button");
@@ -81,8 +60,7 @@ document.addEventListener("DOMContentLoaded", () => {
         );
 
         menuToggle.innerHTML =
-            '<i class="fa-solid fa-bars" aria-hidden="true"></i>';
-
+            '<i class="fa-solid fa-bars"></i>';
     }
 
 
@@ -105,8 +83,7 @@ document.addEventListener("DOMContentLoaded", () => {
         );
 
         menuToggle.innerHTML =
-            '<i class="fa-solid fa-xmark" aria-hidden="true"></i>';
-
+            '<i class="fa-solid fa-xmark"></i>';
     }
 
 
@@ -163,26 +140,25 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         );
 
-
-        document.addEventListener(
-            "keydown",
-            event => {
-
-                if (
-                    event.key === "Escape" &&
-                    nav.classList.contains("active")
-                ) {
-
-                    closeMobileMenu();
-
-                    menuToggle.focus();
-
-                }
-
-            }
-        );
-
     }
+
+
+    /* =================================================
+       ESCAPE KEY
+    ================================================= */
+
+    document.addEventListener(
+        "keydown",
+        event => {
+
+            if (event.key !== "Escape") {
+                return;
+            }
+
+            closeMobileMenu();
+
+        }
+    );
 
 
     /* =================================================
@@ -211,11 +187,8 @@ document.addEventListener("DOMContentLoaded", () => {
     window.addEventListener(
         "scroll",
         handleHeader,
-        {
-            passive: true
-        }
+        { passive: true }
     );
-
 
     handleHeader();
 
@@ -224,34 +197,29 @@ document.addEventListener("DOMContentLoaded", () => {
        SCROLL REVEAL
     ================================================= */
 
-    if (
-        "IntersectionObserver" in window &&
-        revealElements.length > 0
-    ) {
+    if ("IntersectionObserver" in window) {
 
         const revealObserver =
             new IntersectionObserver(
                 (entries, observer) => {
 
-                    entries.forEach(
-                        entry => {
+                    entries.forEach(entry => {
 
-                            if (
-                                entry.isIntersecting
-                            ) {
+                        if (
+                            entry.isIntersecting
+                        ) {
 
-                                entry.target.classList.add(
-                                    "visible"
-                                );
+                            entry.target.classList.add(
+                                "visible"
+                            );
 
-                                observer.unobserve(
-                                    entry.target
-                                );
-
-                            }
+                            observer.unobserve(
+                                entry.target
+                            );
 
                         }
-                    );
+
+                    });
 
                 },
                 {
@@ -262,27 +230,21 @@ document.addEventListener("DOMContentLoaded", () => {
             );
 
 
-        revealElements.forEach(
-            element => {
+        revealElements.forEach(element => {
 
-                revealObserver.observe(
-                    element
-                );
+            revealObserver.observe(element);
 
-            }
-        );
+        });
 
     } else {
 
-        revealElements.forEach(
-            element => {
+        revealElements.forEach(element => {
 
-                element.classList.add(
-                    "visible"
-                );
+            element.classList.add(
+                "visible"
+            );
 
-            }
-        );
+        });
 
     }
 
@@ -291,143 +253,100 @@ document.addEventListener("DOMContentLoaded", () => {
        VIDEO FILTERING
     ================================================= */
 
-    filters.forEach(
-        filter => {
+    filters.forEach(filter => {
 
-            filter.addEventListener(
-                "click",
-                () => {
+        filter.addEventListener(
+            "click",
+            () => {
 
-                    const selectedCategory =
-                        filter.dataset.filter;
-
-
-                    /* Active filter */
-
-                    filters.forEach(
-                        button => {
-
-                            button.classList.remove(
-                                "active"
-                            );
-
-                            button.setAttribute(
-                                "aria-pressed",
-                                "false"
-                            );
-
-                        }
-                    );
+                const selectedCategory =
+                    filter.dataset.filter;
 
 
-                    filter.classList.add(
+                filters.forEach(button => {
+
+                    button.classList.remove(
                         "active"
                     );
 
-                    filter.setAttribute(
+                    button.setAttribute(
                         "aria-pressed",
-                        "true"
+                        "false"
                     );
 
-
-                    /* Filter cards */
-
-                    videoCards.forEach(
-                        card => {
-
-                            const cardCategory =
-                                card.dataset.category;
+                });
 
 
-                            const shouldShow =
-                                selectedCategory === "all" ||
-                                cardCategory === selectedCategory;
+                filter.classList.add("active");
+
+                filter.setAttribute(
+                    "aria-pressed",
+                    "true"
+                );
 
 
-                            if (shouldShow) {
+                videoCards.forEach(card => {
 
-                                card.style.display =
-                                    "";
+                    const cardCategory =
+                        card.dataset.category;
+
+                    const shouldShow =
+                        selectedCategory === "all" ||
+                        cardCategory ===
+                            selectedCategory;
 
 
-                                requestAnimationFrame(
-                                    () => {
+                    if (shouldShow) {
 
-                                        card.classList.remove(
-                                            "video-hidden"
-                                        );
+                        card.style.display = "";
 
-                                    }
-                                );
+                        requestAnimationFrame(
+                            () => {
 
-                            } else {
-
-                                card.classList.add(
+                                card.classList.remove(
                                     "video-hidden"
                                 );
 
-
-                                window.setTimeout(
-                                    () => {
-
-                                        if (
-                                            card.classList.contains(
-                                                "video-hidden"
-                                            )
-                                        ) {
-
-                                            card.style.display =
-                                                "none";
-
-                                        }
-
-                                    },
-                                    250
-                                );
-
                             }
+                        );
 
-                        }
-                    );
+                    } else {
 
-                }
-            );
+                        card.classList.add(
+                            "video-hidden"
+                        );
 
-        }
-    );
+                        setTimeout(
+                            () => {
+
+                                if (
+                                    card.classList.contains(
+                                        "video-hidden"
+                                    )
+                                ) {
+
+                                    card.style.display =
+                                        "none";
+
+                                }
+
+                            },
+                            250
+                        );
+
+                    }
+
+                });
+
+            }
+        );
+
+    });
 
 
     /* =================================================
        VIDEO MODAL
     ================================================= */
-
-    let lastFocusedElement = null;
-
-
-    function isValidYouTubeId(videoId) {
-
-        if (!videoId) {
-            return false;
-        }
-
-        if (
-            videoId.includes("YOUR_VIDEO_ID")
-        ) {
-            return false;
-        }
-
-        /*
-           Standard YouTube IDs are normally
-           11 characters containing letters,
-           numbers, - and _.
-        */
-
-        return /^[a-zA-Z0-9_-]{11}$/.test(
-            videoId
-        );
-
-    }
-
 
     function openVideo(videoId, title) {
 
@@ -439,21 +358,22 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
 
+        /* Check placeholder */
+
         if (
-            !isValidYouTubeId(videoId)
+            !videoId ||
+            videoId.includes(
+                "YOUR_VIDEO_ID"
+            )
         ) {
 
             alert(
-                "Please add a valid 11-character YouTube video ID in the HTML."
+                "Please replace the YouTube video ID in the HTML."
             );
 
             return;
 
         }
-
-
-        lastFocusedElement =
-            document.activeElement;
 
 
         if (videoTitle) {
@@ -465,35 +385,22 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
 
-        /*
-           YouTube embed URL.
-        */
-
-        const embedUrl =
+        videoPlayer.src =
             "https://www.youtube.com/embed/" +
             encodeURIComponent(videoId) +
             "?autoplay=1&rel=0";
 
 
-        videoPlayer.src =
-            embedUrl;
-
-
-        videoModal.classList.add(
-            "active"
-        );
-
+        videoModal.classList.add("active");
 
         videoModal.setAttribute(
             "aria-hidden",
             "false"
         );
 
-
         document.body.classList.add(
             "video-open"
         );
-
 
         document.body.style.overflow =
             "hidden";
@@ -501,7 +408,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (closeVideo) {
 
-            window.setTimeout(
+            setTimeout(
                 () => {
 
                     closeVideo.focus();
@@ -521,22 +428,15 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
-
         videoModal.classList.remove(
             "active"
         );
-
 
         videoModal.setAttribute(
             "aria-hidden",
             "true"
         );
 
-
-        /*
-           Removing the iframe source stops
-           YouTube playback and audio.
-        */
 
         if (videoPlayer) {
 
@@ -549,50 +449,34 @@ document.addEventListener("DOMContentLoaded", () => {
             "video-open"
         );
 
-
-        document.body.style.overflow =
-            "";
-
-
-        if (
-            lastFocusedElement &&
-            typeof lastFocusedElement.focus ===
-            "function"
-        ) {
-
-            lastFocusedElement.focus();
-
-        }
+        document.body.style.overflow = "";
 
     }
 
 
     /* Play buttons */
 
-    playButtons.forEach(
-        button => {
+    playButtons.forEach(button => {
 
-            button.addEventListener(
-                "click",
-                () => {
+        button.addEventListener(
+            "click",
+            () => {
 
-                    const videoId =
-                        button.dataset.video;
+                const videoId =
+                    button.dataset.video;
 
-                    const title =
-                        button.dataset.title;
+                const title =
+                    button.dataset.title;
 
+                openVideo(
+                    videoId,
+                    title
+                );
 
-                    openVideo(
-                        videoId,
-                        title
-                    );
+            }
+        );
 
-                }
-            );
-
-        }
-    );
+    });
 
 
     /* Close button */
@@ -616,8 +500,7 @@ document.addEventListener("DOMContentLoaded", () => {
             event => {
 
                 if (
-                    event.target ===
-                    videoModal
+                    event.target === videoModal
                 ) {
 
                     closeVideoModal();
@@ -630,7 +513,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
 
-    /* Escape closes video */
+    /* Escape video modal */
 
     document.addEventListener(
         "keydown",
@@ -662,18 +545,13 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
-
         if (window.scrollY > 600) {
 
-            backToTop.classList.add(
-                "show"
-            );
+            backToTop.classList.add("show");
 
         } else {
 
-            backToTop.classList.remove(
-                "show"
-            );
+            backToTop.classList.remove("show");
 
         }
 
@@ -683,11 +561,8 @@ document.addEventListener("DOMContentLoaded", () => {
     window.addEventListener(
         "scroll",
         handleBackToTop,
-        {
-            passive: true
-        }
+        { passive: true }
     );
-
 
     handleBackToTop();
 
@@ -698,12 +573,10 @@ document.addEventListener("DOMContentLoaded", () => {
             "click",
             () => {
 
-                window.scrollTo(
-                    {
-                        top: 0,
-                        behavior: "smooth"
-                    }
-                );
+                window.scrollTo({
+                    top: 0,
+                    behavior: "smooth"
+                });
 
             }
         );
@@ -712,13 +585,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
     /* =================================================
-       CONTACT FORM - FORMINIT
+       FORMINIT
     ================================================= */
 
     /*
        IMPORTANT:
-       Replace YOUR_REAL_FORM_ID with your
-       actual Forminit Form ID.
+       Replace the value below with your REAL
+       Forminit Form ID.
     */
 
     const FORMINIT_FORM_ID =
@@ -741,12 +614,12 @@ document.addEventListener("DOMContentLoaded", () => {
                 event.preventDefault();
 
 
-                /* Validate form */
+                /* Validate Form ID */
 
                 if (
                     !FORMINIT_FORM_ID ||
                     FORMINIT_FORM_ID ===
-                    "YOUR_REAL_FORM_ID"
+                        "YOUR_REAL_FORM_ID"
                 ) {
 
                     console.error(
@@ -769,30 +642,16 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
 
 
-                /* Browser validation */
-
-                if (
-                    !contactForm.checkValidity()
-                ) {
-
-                    contactForm.reportValidity();
-
-                    return;
-
-                }
-
-
-                /* Loading state */
+                /* Loading */
 
                 if (submitButton) {
 
                     submitButton.disabled =
                         true;
 
-
                     submitButton.innerHTML = `
                         <span>Sending...</span>
-                        <i class="fa-solid fa-spinner fa-spin" aria-hidden="true"></i>
+                        <i class="fa-solid fa-spinner fa-spin"></i>
                     `;
 
                 }
@@ -826,7 +685,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
                     const {
                         error
-                    } = result || {};
+                    } = result;
 
 
                     if (error) {
@@ -838,8 +697,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
                     }
 
-
-                    /* Success */
 
                     if (formStatus) {
 
@@ -866,7 +723,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     if (formStatus) {
 
                         formStatus.textContent =
-                            error?.message ||
+                            error.message ||
                             "Something went wrong. Please try again.";
 
                         formStatus.className =
@@ -881,10 +738,9 @@ document.addEventListener("DOMContentLoaded", () => {
                         submitButton.disabled =
                             false;
 
-
                         submitButton.innerHTML = `
                             <span>Send Message</span>
-                            <i class="fa-solid fa-paper-plane" aria-hidden="true"></i>
+                            <i class="fa-solid fa-paper-plane"></i>
                         `;
 
                     }
@@ -900,17 +756,6 @@ document.addEventListener("DOMContentLoaded", () => {
             "Forminit SDK was not loaded."
         );
 
-
-        if (formStatus) {
-
-            formStatus.textContent =
-                "Contact form service could not be loaded. Please try again later.";
-
-            formStatus.className =
-                "form-status status-error";
-
-        }
-
     }
 
 
@@ -922,111 +767,70 @@ document.addEventListener("DOMContentLoaded", () => {
         .querySelectorAll(
             'a[href^="#"]'
         )
-        .forEach(
-            anchor => {
+        .forEach(anchor => {
 
-                anchor.addEventListener(
-                    "click",
-                    event => {
+            anchor.addEventListener(
+                "click",
+                event => {
 
-                        const targetId =
-                            anchor.getAttribute(
-                                "href"
-                            );
-
-
-                        if (
-                            !targetId ||
-                            targetId === "#"
-                        ) {
-
-                            return;
-
-                        }
-
-
-                        let target = null;
-
-
-                        try {
-
-                            target =
-                                document.querySelector(
-                                    targetId
-                                );
-
-                        } catch (error) {
-
-                            return;
-
-                        }
-
-
-                        if (!target) {
-                            return;
-                        }
-
-
-                        event.preventDefault();
-
-
-                        const headerHeight =
-                            header
-                                ? header.offsetHeight
-                                : 0;
-
-
-                        const targetPosition =
-                            target
-                                .getBoundingClientRect()
-                                .top +
-                            window.scrollY -
-                            headerHeight -
-                            8;
-
-
-                        window.scrollTo(
-                            {
-                                top:
-                                    Math.max(
-                                        0,
-                                        targetPosition
-                                    ),
-
-                                behavior:
-                                    "smooth"
-                            }
+                    const targetId =
+                        anchor.getAttribute(
+                            "href"
                         );
 
+
+                    if (
+                        !targetId ||
+                        targetId === "#"
+                    ) {
+                        return;
                     }
-                );
-
-            }
-        );
 
 
-    /* =================================================
-       VIDEO FILTER ACCESSIBILITY
-    ================================================= */
+                    const target =
+                        document.querySelector(
+                            targetId
+                        );
 
-    filters.forEach(
-        filter => {
 
-            filter.setAttribute(
-                "aria-pressed",
-                filter.classList.contains(
-                    "active"
-                )
-                    ? "true"
-                    : "false"
+                    if (!target) {
+                        return;
+                    }
+
+
+                    event.preventDefault();
+
+
+                    const headerHeight =
+                        header
+                            ? header.offsetHeight
+                            : 0;
+
+
+                    const targetPosition =
+                        target
+                            .getBoundingClientRect()
+                            .top +
+                        window.scrollY -
+                        headerHeight;
+
+
+                    window.scrollTo({
+                        top: Math.max(
+                            0,
+                            targetPosition
+                        ),
+                        behavior: "smooth"
+                    });
+
+                }
             );
 
-        }
-    );
+        });
 
 
     /* =================================================
-       RESIZE HANDLING
+       RESIZE
     ================================================= */
 
     window.addEventListener(
@@ -1046,14 +850,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
     /* =================================================
-       INITIAL CONSOLE MESSAGE
+       CONSOLE
     ================================================= */
 
     console.log(
         "%cPedro Weng Cybersecurity Website",
         "color:#00e5ff;font-size:16px;font-weight:bold;"
     );
-
 
     console.log(
         "Website JavaScript initialized successfully."

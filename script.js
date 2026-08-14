@@ -1,6 +1,6 @@
 /* =====================================================
    PEDRO WENG CYBERSECURITY WEBSITE
-   JAVASCRIPT
+   SCRIPT.JS
 ===================================================== */
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -9,20 +9,38 @@ document.addEventListener("DOMContentLoaded", () => {
        ELEMENTS
     ================================================= */
 
-    const header = document.getElementById("header");
-    const menuToggle = document.getElementById("menu-toggle");
-    const nav = document.getElementById("nav");
+    const header =
+        document.getElementById("header");
 
-    const backToTop = document.getElementById("back-to-top");
+    const menuToggle =
+        document.getElementById("menu-toggle");
 
-    const contactForm = document.getElementById("contact-form");
-    const formStatus = document.getElementById("form-status");
-    const submitButton = document.getElementById("submit-button");
+    const nav =
+        document.getElementById("nav");
 
-    const videoModal = document.getElementById("video-modal");
-    const videoPlayer = document.getElementById("video-player");
-    const videoTitle = document.getElementById("video-modal-title");
-    const closeVideo = document.getElementById("video-modal-close");
+    const backToTop =
+        document.getElementById("back-to-top");
+
+    const contactForm =
+        document.getElementById("contact-form");
+
+    const formStatus =
+        document.getElementById("form-status");
+
+    const submitButton =
+        document.getElementById("submit-button");
+
+    const videoModal =
+        document.getElementById("video-modal");
+
+    const videoPlayer =
+        document.getElementById("video-player");
+
+    const videoTitle =
+        document.getElementById("video-modal-title");
+
+    const closeVideo =
+        document.getElementById("video-modal-close");
 
     const playButtons =
         document.querySelectorAll(".play-button");
@@ -32,9 +50,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const videoCards =
         document.querySelectorAll(".video-card");
-
-    const revealElements =
-        document.querySelectorAll(".reveal");
 
 
     /* =================================================
@@ -114,9 +129,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 link.addEventListener(
                     "click",
                     () => {
-
                         closeMobileMenu();
-
                     }
                 );
 
@@ -157,6 +170,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
             closeMobileMenu();
 
+            if (
+                videoModal &&
+                videoModal.classList.contains("active")
+            ) {
+
+                closeVideoModal();
+
+            }
+
         }
     );
 
@@ -196,6 +218,10 @@ document.addEventListener("DOMContentLoaded", () => {
     /* =================================================
        SCROLL REVEAL
     ================================================= */
+
+    const revealElements =
+        document.querySelectorAll(".reveal");
+
 
     if ("IntersectionObserver" in window) {
 
@@ -277,7 +303,9 @@ document.addEventListener("DOMContentLoaded", () => {
                 });
 
 
-                filter.classList.add("active");
+                filter.classList.add(
+                    "active"
+                );
 
                 filter.setAttribute(
                     "aria-pressed",
@@ -292,8 +320,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
                     const shouldShow =
                         selectedCategory === "all" ||
-                        cardCategory ===
-                            selectedCategory;
+                        cardCategory === selectedCategory;
 
 
                     if (shouldShow) {
@@ -348,17 +375,20 @@ document.addEventListener("DOMContentLoaded", () => {
        VIDEO MODAL
     ================================================= */
 
-    function openVideo(videoId, title) {
+    function openVideo(
+        videoId,
+        title
+    ) {
 
         if (
             !videoModal ||
             !videoPlayer
         ) {
+
             return;
+
         }
 
-
-        /* Check placeholder */
 
         if (
             !videoId ||
@@ -368,7 +398,7 @@ document.addEventListener("DOMContentLoaded", () => {
         ) {
 
             alert(
-                "Please replace the YouTube video ID in the HTML."
+                "Please replace the YouTube placeholder with a real YouTube video ID."
             );
 
             return;
@@ -391,7 +421,9 @@ document.addEventListener("DOMContentLoaded", () => {
             "?autoplay=1&rel=0";
 
 
-        videoModal.classList.add("active");
+        videoModal.classList.add(
+            "active"
+        );
 
         videoModal.setAttribute(
             "aria-hidden",
@@ -402,17 +434,12 @@ document.addEventListener("DOMContentLoaded", () => {
             "video-open"
         );
 
-        document.body.style.overflow =
-            "hidden";
-
 
         if (closeVideo) {
 
             setTimeout(
                 () => {
-
                     closeVideo.focus();
-
                 },
                 100
             );
@@ -449,12 +476,8 @@ document.addEventListener("DOMContentLoaded", () => {
             "video-open"
         );
 
-        document.body.style.overflow = "";
-
     }
 
-
-    /* Play buttons */
 
     playButtons.forEach(button => {
 
@@ -479,8 +502,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
 
-    /* Close button */
-
     if (closeVideo) {
 
         closeVideo.addEventListener(
@@ -490,8 +511,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     }
 
-
-    /* Background click */
 
     if (videoModal) {
 
@@ -513,28 +532,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
 
-    /* Escape video modal */
-
-    document.addEventListener(
-        "keydown",
-        event => {
-
-            if (
-                event.key === "Escape" &&
-                videoModal &&
-                videoModal.classList.contains(
-                    "active"
-                )
-            ) {
-
-                closeVideoModal();
-
-            }
-
-        }
-    );
-
-
     /* =================================================
        BACK TO TOP
     ================================================= */
@@ -547,11 +544,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (window.scrollY > 600) {
 
-            backToTop.classList.add("show");
+            backToTop.classList.add(
+                "show"
+            );
 
         } else {
 
-            backToTop.classList.remove("show");
+            backToTop.classList.remove(
+                "show"
+            );
 
         }
 
@@ -590,12 +591,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
     /*
        IMPORTANT:
-       Replace the value below with your REAL
-       Forminit Form ID.
+
+       Replace this with your actual Forminit Form ID.
+
+       Example:
+
+       const FORMINIT_FORM_ID =
+           "64ep4stw8gq";
     */
 
     const FORMINIT_FORM_ID =
-        "64ep4stw8gq";
+        "YOUR_REAL_FORM_ID";
 
 
     if (
@@ -614,16 +620,14 @@ document.addEventListener("DOMContentLoaded", () => {
                 event.preventDefault();
 
 
-                /* Validate Form ID */
-
                 if (
                     !FORMINIT_FORM_ID ||
                     FORMINIT_FORM_ID ===
-                        "YOUR_REAL_FORM_ID"
+                    "YOUR_REAL_FORM_ID"
                 ) {
 
                     console.error(
-                        "Forminit Form ID has not been configured."
+                        "Forminit Form ID is not configured."
                     );
 
 
@@ -641,8 +645,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 }
 
-
-                /* Loading */
 
                 if (submitButton) {
 
@@ -783,7 +785,9 @@ document.addEventListener("DOMContentLoaded", () => {
                         !targetId ||
                         targetId === "#"
                     ) {
+
                         return;
+
                     }
 
 
@@ -808,19 +812,21 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
                     const targetPosition =
-                        target
-                            .getBoundingClientRect()
+                        target.getBoundingClientRect()
                             .top +
                         window.scrollY -
                         headerHeight;
 
 
                     window.scrollTo({
+
                         top: Math.max(
                             0,
                             targetPosition
                         ),
+
                         behavior: "smooth"
+
                     });
 
                 }
@@ -850,6 +856,47 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
     /* =================================================
+       IMAGE ERROR CHECK
+    ================================================= */
+
+    const profileImage =
+        document.querySelector(
+            ".profile-image"
+        );
+
+
+    if (profileImage) {
+
+        profileImage.addEventListener(
+            "error",
+            () => {
+
+                console.error(
+                    "ERROR: profile.jpg could not be loaded."
+                );
+
+                console.error(
+                    "Make sure profile.jpg is in the same folder as index.html."
+                );
+
+            }
+        );
+
+        profileImage.addEventListener(
+            "load",
+            () => {
+
+                console.log(
+                    "✓ profile.jpg loaded successfully."
+                );
+
+            }
+        );
+
+    }
+
+
+    /* =================================================
        CONSOLE
     ================================================= */
 
@@ -859,7 +906,7 @@ document.addEventListener("DOMContentLoaded", () => {
     );
 
     console.log(
-        "Website JavaScript initialized successfully."
+        "✓ Website JavaScript initialized successfully."
     );
 
 });

@@ -1,4 +1,5 @@
 /* =====================================================
+  /* =====================================================
    PEDRO WENG CYBERSECURITY WEBSITE
    SCRIPT.JS
 ===================================================== */
@@ -23,12 +24,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const contactForm =
         document.getElementById("contact-form");
-
-    const formStatus =
-        document.getElementById("form-status");
-
-    const submitButton =
-        document.getElementById("submit-button");
 
     const videoModal =
         document.getElementById("video-modal");
@@ -114,9 +109,13 @@ document.addEventListener("DOMContentLoaded", () => {
                     nav.classList.contains("active");
 
                 if (isOpen) {
+
                     closeMobileMenu();
+
                 } else {
+
                     openMobileMenu();
+
                 }
 
             }
@@ -129,7 +128,9 @@ document.addEventListener("DOMContentLoaded", () => {
                 link.addEventListener(
                     "click",
                     () => {
+
                         closeMobileMenu();
+
                     }
                 );
 
@@ -439,7 +440,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
             setTimeout(
                 () => {
+
                     closeVideo.focus();
+
                 },
                 100
             );
@@ -586,176 +589,21 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
     /* =================================================
-       FORMINIT
+       CONTACT FORM
+       
+       IMPORTANT:
+       Forminit submission is handled in index.html.
+       Do NOT add another submit listener here.
     ================================================= */
 
-    /*
-       IMPORTANT:
+    if (contactForm) {
 
-       Replace this with your actual Forminit Form ID.
-
-       Example:
-
-       const FORMINIT_FORM_ID =
-           "64ep4stw8gq";
-    */
-
-    const FORMINIT_FORM_ID =
-        "64ep4stw8gq";
-
-
-    if (
-        contactForm &&
-        typeof Forminit !== "undefined"
-    ) {
-
-        const forminit =
-            new Forminit();
-
-
-        contactForm.addEventListener(
-            "submit",
-            async event => {
-
-                event.preventDefault();
-
-
-                if (
-                    !FORMINIT_FORM_ID ||
-                    FORMINIT_FORM_ID ===
-                    "YOUR_REAL_FORM_ID"
-                ) {
-
-                    console.error(
-                        "Forminit Form ID is not configured."
-                    );
-
-
-                    if (formStatus) {
-
-                        formStatus.textContent =
-                            "Contact form is not configured yet. Please add your Forminit Form ID.";
-
-                        formStatus.className =
-                            "form-status status-error";
-
-                    }
-
-                    return;
-
-                }
-
-
-                if (submitButton) {
-
-                    submitButton.disabled =
-                        true;
-
-                    submitButton.innerHTML = `
-                        <span>Sending...</span>
-                        <i class="fa-solid fa-spinner fa-spin"></i>
-                    `;
-
-                }
-
-
-                if (formStatus) {
-
-                    formStatus.textContent =
-                        "Sending your message...";
-
-                    formStatus.className =
-                        "form-status status-loading";
-
-                }
-
-
-                try {
-
-                    const formData =
-                        new FormData(
-                            contactForm
-                        );
-
-
-                    const result =
-                        await forminit.submit(
-                            FORMINIT_FORM_ID,
-                            formData
-                        );
-
-
-                    const {
-                        error
-                    } = result;
-
-
-                    if (error) {
-
-                        throw new Error(
-                            error.message ||
-                            "Unable to send message."
-                        );
-
-                    }
-
-
-                    if (formStatus) {
-
-                        formStatus.textContent =
-                            "Message sent successfully! Thank you for contacting me.";
-
-                        formStatus.className =
-                            "form-status status-success";
-
-                    }
-
-
-                    contactForm.reset();
-
-
-                } catch (error) {
-
-                    console.error(
-                        "Form submission error:",
-                        error
-                    );
-
-
-                    if (formStatus) {
-
-                        formStatus.textContent =
-                            error.message ||
-                            "Something went wrong. Please try again.";
-
-                        formStatus.className =
-                            "form-status status-error";
-
-                    }
-
-                } finally {
-
-                    if (submitButton) {
-
-                        submitButton.disabled =
-                            false;
-
-                        submitButton.innerHTML = `
-                            <span>Send Message</span>
-                            <i class="fa-solid fa-paper-plane"></i>
-                        `;
-
-                    }
-
-                }
-
-            }
+        console.log(
+            "✓ Contact form detected."
         );
 
-    } else if (contactForm) {
-
-        console.error(
-            "Forminit SDK was not loaded."
+        console.log(
+            "✓ Forminit submission is handled by index.html."
         );
 
     }
@@ -881,6 +729,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
             }
         );
+
 
         profileImage.addEventListener(
             "load",

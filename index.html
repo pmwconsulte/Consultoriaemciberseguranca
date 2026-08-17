@@ -1662,7 +1662,7 @@
 
             <div class="contact-form-card reveal">
 
-                <form id="64ep4stw8gq">
+                <form id="contact-form">
 
                     <div class="form-row">
 
@@ -2112,7 +2112,84 @@
 
 <script src="https://forminit.com/sdk/v1/forminit.js"></script>
 
-<script src="script.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
 
+    const forminit = new Forminit();
+
+    const FORM_ID = "64ep4stw8gq";
+
+    const form = document.getElementById("contact-form");
+    const status = document.getElementById("form-status");
+    const button = document.getElementById("submit-button");
+
+    if (!form) {
+        console.error("Contact form not found.");
+        return;
+    }
+
+    form.addEventListener("submit", async function (event) {
+
+        event.preventDefault();
+
+        status.textContent = "Sending...";
+        status.className = "form-status";
+        button.disabled = true;
+
+        try {
+
+            const formData = new FormData(form);
+
+            const { data, error } = await forminit.submit(
+                FORM_ID,
+                formData
+            );
+
+            if (error) {
+
+                console.error("Forminit error:", error);
+
+                status.textContent =
+                    error.message ||
+                    "Unable to send your message. Please try again.";
+
+                status.className =
+                    "form-status status-error";
+
+                return;
+            }
+
+            console.log("Form submitted:", data);
+
+            status.textContent =
+                "Message sent successfully! Thank you for contacting me.";
+
+            status.className =
+                "form-status status-success";
+
+            form.reset();
+
+        } catch (error) {
+
+            console.error("Submission error:", error);
+
+            status.textContent =
+                "Something went wrong. Please try again.";
+
+            status.className =
+                "form-status status-error";
+
+        } finally {
+
+            button.disabled = false;
+
+        }
+
+    });
+
+});
+</script>
+
+<script src="script.js"></script>
 </body>
 </html>

@@ -1,39 +1,17 @@
 /* =========================================================
    PEDRO WENG - CYBERSECURITY WEBSITE
    MAIN JAVASCRIPT
+   FORMINIT CONTACT FORM INTEGRATION
    ========================================================= */
 
 "use strict";
 
 
 /* =========================================================
-   GLOBAL CONFIGURATION
+   GLOBAL VARIABLES
 ========================================================= */
 
-/*
- * =========================================================
- * FORMINIT CONFIGURATION
- * =========================================================
- *
- * REPLACE:
- *
- *     YOUR_FORMINIT_FORM_ID
- *
- * WITH YOUR REAL FORMINIT FORM ID.
- *
- * Example:
- *
- *     const FORMINIT_FORM_ID = "abc123xyz";
- *
- */
-
-const FORMINIT_FORM_ID =
-    "64ep4stw8gq";
-
-
-/*
- * Supported website languages
- */
+let currentLanguage = "en";
 
 const SUPPORTED_LANGUAGES = [
     "en",
@@ -41,11 +19,22 @@ const SUPPORTED_LANGUAGES = [
 ];
 
 
+/* =========================================================
+   FORMINIT CONFIGURATION
+========================================================= */
+
 /*
- * Current language
+ * ========================================================
+ * PUT YOUR FORMINIT FORM ID HERE
+ * ========================================================
+ *
+ * Example:
+ *
+ * const FORMINIT_FORM_ID = "frm_abc123xyz";
+ *
  */
 
-let currentLanguage = "en";
+const FORMINIT_FORM_ID = "64ep4stw8gq";
 
 
 /* =========================================================
@@ -56,48 +45,33 @@ document.addEventListener(
     "DOMContentLoaded",
     () => {
 
-        /*
-         * Initialize all website features
-         */
+        /* -------------------------------------------------
+           INITIALIZE ALL FEATURES
+        ------------------------------------------------- */
 
         initLanguageSwitcher();
-
         initMobileMenu();
-
         initHeaderScroll();
-
         initSmoothScrolling();
-
         initRevealAnimations();
-
         initActiveNavigation();
-
         initVideoFilters();
-
         initVideoModal();
-
         initBackToTop();
-
         initContactForm();
-
         initKeyboardAccessibility();
 
-        protectExternalLinks();
 
-
-        /*
-         * Restore saved language
-         */
+        /* -------------------------------------------------
+           RESTORE SAVED LANGUAGE
+        ------------------------------------------------- */
 
         const savedLanguage =
             localStorage.getItem(
                 "preferredLanguage"
             ) || "en";
 
-
-        setLanguage(
-            savedLanguage
-        );
+        setLanguage(savedLanguage);
 
     }
 );
@@ -114,41 +88,34 @@ function initLanguageSwitcher() {
             ".language-btn"
         );
 
-
     if (!languageButtons.length) {
         return;
     }
 
 
-    languageButtons.forEach(
-        button => {
+    languageButtons.forEach(button => {
 
-            button.addEventListener(
-                "click",
-                () => {
+        button.addEventListener(
+            "click",
+            () => {
 
-                    const language =
-                        button.dataset.language;
+                const language =
+                    button.dataset.language;
 
-
-                    if (
-                        !SUPPORTED_LANGUAGES.includes(
-                            language
-                        )
-                    ) {
-                        return;
-                    }
-
-
-                    setLanguage(
+                if (
+                    !SUPPORTED_LANGUAGES.includes(
                         language
-                    );
-
+                    )
+                ) {
+                    return;
                 }
-            );
 
-        }
-    );
+                setLanguage(language);
+
+            }
+        );
+
+    });
 
 }
 
@@ -157,13 +124,7 @@ function initLanguageSwitcher() {
    SET LANGUAGE
 ========================================================= */
 
-function setLanguage(
-    language
-) {
-
-    /*
-     * Validate language
-     */
+function setLanguage(language) {
 
     if (
         !SUPPORTED_LANGUAGES.includes(
@@ -176,8 +137,7 @@ function setLanguage(
     }
 
 
-    currentLanguage =
-        language;
+    currentLanguage = language;
 
 
     /* -----------------------------------------------------
@@ -194,24 +154,14 @@ function setLanguage(
         element => {
 
             const translatedText =
-                element.dataset[
-                    language
-                ];
-
+                element.dataset[language];
 
             if (
-                translatedText ===
-                undefined
+                translatedText === undefined
             ) {
-
                 return;
-
             }
 
-
-            /*
-             * Simple text elements
-             */
 
             if (
                 element.children.length === 0
@@ -220,43 +170,38 @@ function setLanguage(
                 element.textContent =
                     translatedText;
 
-                return;
+            } else {
 
-            }
-
-
-            /*
-             * Elements containing icons
-             */
-
-            const tagName =
-                element.tagName.toLowerCase();
+                const tagName =
+                    element.tagName.toLowerCase();
 
 
-            if (
-                tagName === "h1" ||
-                tagName === "h2" ||
-                tagName === "h3" ||
-                tagName === "h4" ||
-                tagName === "h5" ||
-                tagName === "h6" ||
-                tagName === "p" ||
-                tagName === "span" ||
-                tagName === "a" ||
-                tagName === "strong" ||
-                tagName === "small"
-            ) {
+                if (
+                    tagName === "h1" ||
+                    tagName === "h2" ||
+                    tagName === "h3" ||
+                    tagName === "h4" ||
+                    tagName === "h5" ||
+                    tagName === "h6" ||
+                    tagName === "p" ||
+                    tagName === "span" ||
+                    tagName === "a" ||
+                    tagName === "strong" ||
+                    tagName === "small"
+                ) {
 
-                const hasIcon =
-                    element.querySelector(
-                        "i"
-                    );
+                    const hasIcon =
+                        element.querySelector(
+                            "i"
+                        );
 
 
-                if (!hasIcon) {
+                    if (!hasIcon) {
 
-                    element.textContent =
-                        translatedText;
+                        element.textContent =
+                            translatedText;
+
+                    }
 
                 }
 
@@ -267,7 +212,7 @@ function setLanguage(
 
 
     /* -----------------------------------------------------
-       SELECT OPTIONS
+       UPDATE SELECT OPTIONS
     ----------------------------------------------------- */
 
     updateSelectOptions(
@@ -276,7 +221,7 @@ function setLanguage(
 
 
     /* -----------------------------------------------------
-       FORM PLACEHOLDERS
+       UPDATE FORM PLACEHOLDERS
     ----------------------------------------------------- */
 
     updateFormPlaceholders(
@@ -285,14 +230,14 @@ function setLanguage(
 
 
     /* -----------------------------------------------------
-       VIDEO MODAL
+       UPDATE VIDEO MODAL
     ----------------------------------------------------- */
 
     updateVideoModalLanguage();
 
 
     /* -----------------------------------------------------
-       HTML LANGUAGE
+       UPDATE HTML LANGUAGE
     ----------------------------------------------------- */
 
     document.documentElement.lang =
@@ -302,7 +247,7 @@ function setLanguage(
 
 
     /* -----------------------------------------------------
-       PAGE TITLE
+       UPDATE PAGE TITLE
     ----------------------------------------------------- */
 
     updatePageTitle(
@@ -311,7 +256,7 @@ function setLanguage(
 
 
     /* -----------------------------------------------------
-       META DESCRIPTION
+       UPDATE META DESCRIPTION
     ----------------------------------------------------- */
 
     updateMetaDescription(
@@ -320,7 +265,7 @@ function setLanguage(
 
 
     /* -----------------------------------------------------
-       LANGUAGE BUTTONS
+       UPDATE LANGUAGE BUTTONS
     ----------------------------------------------------- */
 
     updateLanguageButtons(
@@ -347,8 +292,7 @@ function setLanguage(
             "languageChanged",
             {
                 detail: {
-                    language:
-                        language
+                    language: language
                 }
             }
         )
@@ -377,10 +321,8 @@ function updateLanguageButtons(
             const buttonLanguage =
                 button.dataset.language;
 
-
             const isActive =
-                buttonLanguage ===
-                language;
+                buttonLanguage === language;
 
 
             button.classList.toggle(
@@ -418,9 +360,7 @@ function updateSelectOptions(
         option => {
 
             const text =
-                option.dataset[
-                    language
-                ];
+                option.dataset[language];
 
 
             if (text) {
@@ -491,9 +431,7 @@ function updatePageTitle(
     }
 
 
-    if (
-        language === "pt"
-    ) {
+    if (language === "pt") {
 
         title.textContent =
             "Pedro Weng | Engenheiro Sénior de Cibersegurança";
@@ -527,9 +465,7 @@ function updateMetaDescription(
     }
 
 
-    if (
-        language === "pt"
-    ) {
+    if (language === "pt") {
 
         description.setAttribute(
             "content",
@@ -559,7 +495,6 @@ function initMobileMenu() {
             "menu-toggle"
         );
 
-
     const nav =
         document.getElementById(
             "nav"
@@ -570,9 +505,7 @@ function initMobileMenu() {
         !menuToggle ||
         !nav
     ) {
-
         return;
-
     }
 
 
@@ -607,9 +540,9 @@ function initMobileMenu() {
     );
 
 
-    /*
-     * Close after navigation
-     */
+    /* -----------------------------------------------------
+       CLOSE WHEN NAV LINK CLICKED
+    ----------------------------------------------------- */
 
     const navLinks =
         nav.querySelectorAll(
@@ -633,9 +566,9 @@ function initMobileMenu() {
     );
 
 
-    /*
-     * Close when clicking outside
-     */
+    /* -----------------------------------------------------
+       CLOSE WHEN CLICKING OUTSIDE
+    ----------------------------------------------------- */
 
     document.addEventListener(
         "click",
@@ -671,7 +604,6 @@ function closeMobileMenu() {
             "menu-toggle"
         );
 
-
     const nav =
         document.getElementById(
             "nav"
@@ -682,9 +614,7 @@ function closeMobileMenu() {
         !menuToggle ||
         !nav
     ) {
-
         return;
-
     }
 
 
@@ -713,7 +643,7 @@ function closeMobileMenu() {
 
 
 /* =========================================================
-   UPDATE MENU ICON
+   MENU ICON
 ========================================================= */
 
 function updateMenuIcon(
@@ -738,7 +668,6 @@ function updateMenuIcon(
             "fa-bars"
         );
 
-
         icon.classList.add(
             "fa-xmark"
         );
@@ -748,7 +677,6 @@ function updateMenuIcon(
         icon.classList.remove(
             "fa-xmark"
         );
-
 
         icon.classList.add(
             "fa-bars"
@@ -841,9 +769,7 @@ function initSmoothScrolling() {
                         !href ||
                         href === "#"
                     ) {
-
                         return;
-
                     }
 
 
@@ -885,18 +811,15 @@ function initSmoothScrolling() {
 
 
                     const targetPosition =
-                        target
-                            .getBoundingClientRect()
+                        target.getBoundingClientRect()
                             .top +
                         window.scrollY -
                         headerHeight;
 
 
                     window.scrollTo({
-                        top:
-                            targetPosition,
-                        behavior:
-                            "smooth"
+                        top: targetPosition,
+                        behavior: "smooth"
                     });
 
 
@@ -938,7 +861,9 @@ function initRevealAnimations() {
         );
 
 
-    if (!revealElements.length) {
+    if (
+        !revealElements.length
+    ) {
         return;
     }
 
@@ -963,15 +888,12 @@ function initRevealAnimations() {
             }
         );
 
-
         return;
-
     }
 
 
     if (
-        "IntersectionObserver"
-        in window
+        "IntersectionObserver" in window
     ) {
 
         const observer =
@@ -1001,9 +923,7 @@ function initRevealAnimations() {
 
                 },
                 {
-                    threshold:
-                        0.12,
-
+                    threshold: 0.12,
                     rootMargin:
                         "0px 0px -50px 0px"
                 }
@@ -1059,9 +979,7 @@ function initActiveNavigation() {
         !sections.length ||
         !navLinks.length
     ) {
-
         return;
-
     }
 
 
@@ -1117,9 +1035,7 @@ function initActiveNavigation() {
             {
                 rootMargin:
                     "-35% 0px -55% 0px",
-
-                threshold:
-                    0
+                threshold: 0
             }
         );
 
@@ -1159,9 +1075,7 @@ function initVideoFilters() {
         !filters.length ||
         !cards.length
     ) {
-
         return;
-
     }
 
 
@@ -1180,8 +1094,7 @@ function initVideoFilters() {
                         button => {
 
                             const active =
-                                button ===
-                                filter;
+                                button === filter;
 
 
                             button.classList.toggle(
@@ -1208,13 +1121,10 @@ function initVideoFilters() {
 
                             const shouldShow =
                                 category === "all" ||
-                                cardCategory ===
-                                    category;
+                                cardCategory === category;
 
 
-                            if (
-                                shouldShow
-                            ) {
+                            if (shouldShow) {
 
                                 card.classList.remove(
                                     "video-hidden"
@@ -1321,9 +1231,7 @@ function initVideoModal() {
         !iframe ||
         !title
     ) {
-
         return;
-
     }
 
 
@@ -1487,21 +1395,26 @@ function closeVideoModal() {
 
 
 /* =========================================================
-   VIDEO UNAVAILABLE
+   VIDEO UNAVAILABLE MESSAGE
 ========================================================= */
 
 function showVideoUnavailableMessage() {
 
+    const messageEn =
+        "This video is not available yet.";
+
+
+    const messagePt =
+        "Este vídeo ainda não está disponível.";
+
+
     const message =
-        getTranslation(
-            "This video is not available yet.",
-            "Este vídeo ainda não está disponível."
-        );
+        currentLanguage === "pt"
+            ? messagePt
+            : messageEn;
 
 
-    alert(
-        message
-    );
+    alert(message);
 
 }
 
@@ -1617,33 +1530,7 @@ function initContactForm() {
 
 
     if (!form) {
-
-        console.warn(
-            "Contact form #contact-form was not found."
-        );
-
         return;
-
-    }
-
-
-    /*
-     * Attach Forminit ID automatically.
-     *
-     * This means you can keep the ID in JavaScript.
-     */
-
-    if (
-        FORMINIT_FORM_ID &&
-        FORMINIT_FORM_ID !==
-            "YOUR_FORMINIT_FORM_ID"
-    ) {
-
-        form.setAttribute(
-            "data-forminit-id",
-            FORMINIT_FORM_ID
-        );
-
     }
 
 
@@ -1681,14 +1568,41 @@ async function handleContactFormSubmit(
     }
 
 
-    /*
-     * Validate form
-     */
+    /* -----------------------------------------------------
+       CHECK FOR FORMINIT FORM ID
+    ----------------------------------------------------- */
 
     if (
-        !validateContactForm(
-            form
-        )
+        !FORMINIT_FORM_ID ||
+        FORMINIT_FORM_ID ===
+            "YOUR_FORM_ID"
+    ) {
+
+        console.error(
+            "Forminit Form ID has not been configured."
+        );
+
+
+        setFormStatus(
+            getTranslation(
+                "Form configuration error. Please contact the website administrator.",
+                "Erro de configuração do formulário. Contacte o administrador do website."
+            ),
+            "error"
+        );
+
+
+        return;
+
+    }
+
+
+    /* -----------------------------------------------------
+       VALIDATE FORM
+    ----------------------------------------------------- */
+
+    if (
+        !validateContactForm(form)
     ) {
 
         setFormStatus(
@@ -1705,9 +1619,9 @@ async function handleContactFormSubmit(
     }
 
 
-    /*
-     * Prevent double submission
-     */
+    /* -----------------------------------------------------
+       PREVENT DOUBLE SUBMISSION
+    ----------------------------------------------------- */
 
     if (
         submitButton &&
@@ -1715,9 +1629,12 @@ async function handleContactFormSubmit(
     ) {
 
         return;
-
     }
 
+
+    /* -----------------------------------------------------
+       LOADING STATE
+    ----------------------------------------------------- */
 
     setSubmitButtonLoading(
         true
@@ -1735,6 +1652,10 @@ async function handleContactFormSubmit(
 
     try {
 
+        /* -------------------------------------------------
+           SUBMIT TO FORMINIT
+        ------------------------------------------------- */
+
         const result =
             await submitToForminit(
                 form
@@ -1742,9 +1663,12 @@ async function handleContactFormSubmit(
 
 
         if (
-            result &&
             result.success
         ) {
+
+            /* ---------------------------------------------
+               SUCCESS
+            --------------------------------------------- */
 
             setFormStatus(
                 getTranslation(
@@ -1758,17 +1682,15 @@ async function handleContactFormSubmit(
             form.reset();
 
 
-            /*
-             * Restore translated placeholders
-             */
-
             updateFormPlaceholders(
                 currentLanguage
             );
 
+
         } else {
 
             throw new Error(
+                result.message ||
                 "Form submission failed."
             );
 
@@ -1797,6 +1719,102 @@ async function handleContactFormSubmit(
         );
 
     }
+
+}
+
+
+/* =========================================================
+   FORMINIT SUBMISSION
+========================================================= */
+
+async function submitToForminit(
+    form
+) {
+
+    /* -----------------------------------------------------
+       CHECK SDK
+    ----------------------------------------------------- */
+
+    if (
+        typeof Forminit === "undefined"
+    ) {
+
+        throw new Error(
+            "Forminit SDK is not loaded."
+        );
+
+    }
+
+
+    /* -----------------------------------------------------
+       CREATE FORMINIT INSTANCE
+    ----------------------------------------------------- */
+
+    const forminit =
+        new Forminit();
+
+
+    /* -----------------------------------------------------
+       CREATE FORM DATA
+    ----------------------------------------------------- */
+
+    const formData =
+        new FormData(form);
+
+
+    /* -----------------------------------------------------
+       SUBMIT
+    ----------------------------------------------------- */
+
+    const {
+        data,
+        redirectUrl,
+        error
+    } =
+        await forminit.submit(
+            FORMINIT_FORM_ID,
+            formData
+        );
+
+
+    /* -----------------------------------------------------
+       HANDLE FORMINIT ERROR
+    ----------------------------------------------------- */
+
+    if (error) {
+
+        console.error(
+            "Forminit error:",
+            error
+        );
+
+
+        return {
+            success: false,
+            message:
+                error.message ||
+                "Forminit submission failed.",
+            error: error
+        };
+
+    }
+
+
+    /* -----------------------------------------------------
+       SUCCESS
+    ----------------------------------------------------- */
+
+    console.log(
+        "Forminit submission successful:",
+        data
+    );
+
+
+    return {
+        success: true,
+        data: data,
+        redirectUrl: redirectUrl
+    };
 
 }
 
@@ -1850,9 +1868,9 @@ function validateContactForm(
         message.value.trim();
 
 
-    /*
-     * Name
-     */
+    /* -----------------------------------------------------
+       NAME
+    ----------------------------------------------------- */
 
     if (
         nameValue.length < 2
@@ -1865,9 +1883,9 @@ function validateContactForm(
     }
 
 
-    /*
-     * Email
-     */
+    /* -----------------------------------------------------
+       EMAIL
+    ----------------------------------------------------- */
 
     if (
         !isValidEmail(
@@ -1882,9 +1900,9 @@ function validateContactForm(
     }
 
 
-    /*
-     * Message
-     */
+    /* -----------------------------------------------------
+       MESSAGE
+    ----------------------------------------------------- */
 
     if (
         messageValue.length < 10
@@ -1922,172 +1940,6 @@ function isValidEmail(
 
 
 /* =========================================================
-   FORMINIT SUBMISSION
-========================================================= */
-
-async function submitToForminit(
-    form
-) {
-
-    /*
-     * Make sure the Forminit ID exists.
-     */
-
-    if (
-        !FORMINIT_FORM_ID ||
-        FORMINIT_FORM_ID ===
-            "YOUR_FORMINIT_FORM_ID"
-    ) {
-
-        throw new Error(
-            "Forminit form ID has not been configured."
-        );
-
-    }
-
-
-    /*
-     * Make sure the ID is attached to the form.
-     */
-
-    form.setAttribute(
-        "data-forminit-id",
-        FORMINIT_FORM_ID
-    );
-
-
-    /* -----------------------------------------------------
-       OPTION 1
-       Forminit global object
-    ----------------------------------------------------- */
-
-    if (
-        window.Forminit &&
-        typeof window.Forminit.submit ===
-            "function"
-    ) {
-
-        const response =
-            await window.Forminit.submit(
-                form
-            );
-
-
-        return normalizeForminitResponse(
-            response
-        );
-
-    }
-
-
-    /* -----------------------------------------------------
-       OPTION 2
-       forminit global object
-    ----------------------------------------------------- */
-
-    if (
-        window.forminit &&
-        typeof window.forminit.submit ===
-            "function"
-    ) {
-
-        const response =
-            await window.forminit.submit(
-                form
-            );
-
-
-        return normalizeForminitResponse(
-            response
-        );
-
-    }
-
-
-    /*
-     * SDK not available
-     */
-
-    throw new Error(
-        "Forminit SDK is not available or is not configured."
-    );
-
-}
-
-
-/* =========================================================
-   NORMALIZE FORMINIT RESPONSE
-========================================================= */
-
-function normalizeForminitResponse(
-    response
-) {
-
-    /*
-     * success === true
-     */
-
-    if (
-        response &&
-        response.success === true
-    ) {
-
-        return {
-            success: true,
-            data: response
-        };
-
-    }
-
-
-    /*
-     * ok === true
-     */
-
-    if (
-        response &&
-        response.ok === true
-    ) {
-
-        return {
-            success: true,
-            data: response
-        };
-
-    }
-
-
-    /*
-     * HTTP response
-     */
-
-    if (
-        response &&
-        response.status >= 200 &&
-        response.status < 300
-    ) {
-
-        return {
-            success: true,
-            data: response
-        };
-
-    }
-
-
-    /*
-     * Failed
-     */
-
-    return {
-        success: false,
-        data: response
-    };
-
-}
-
-
-/* =========================================================
    SUBMIT BUTTON LOADING
 ========================================================= */
 
@@ -2120,8 +1972,7 @@ function setSubmitButtonLoading(
 
     if (loading) {
 
-        button.disabled =
-            true;
+        button.disabled = true;
 
 
         button.classList.add(
@@ -2166,8 +2017,7 @@ function setSubmitButtonLoading(
 
     } else {
 
-        button.disabled =
-            false;
+        button.disabled = false;
 
 
         button.classList.remove(
@@ -2282,49 +2132,37 @@ function initKeyboardAccessibility() {
         "keydown",
         event => {
 
-            /*
-             * ESCAPE
-             */
+            /* -------------------------------------------------
+               ESCAPE
+            ------------------------------------------------- */
 
             if (
-                event.key !==
-                "Escape"
+                event.key === "Escape"
             ) {
 
-                return;
+                const modal =
+                    document.getElementById(
+                        "video-modal"
+                    );
+
+
+                if (
+                    modal &&
+                    modal.classList.contains(
+                        "active"
+                    )
+                ) {
+
+                    closeVideoModal();
+
+                    return;
+
+                }
+
+
+                closeMobileMenu();
 
             }
-
-
-            /*
-             * Close video modal
-             */
-
-            const modal =
-                document.getElementById(
-                    "video-modal"
-                );
-
-
-            if (
-                modal &&
-                modal.classList.contains(
-                    "active"
-                )
-            ) {
-
-                closeVideoModal();
-
-                return;
-
-            }
-
-
-            /*
-             * Close mobile menu
-             */
-
-            closeMobileMenu();
 
         }
     );
@@ -2353,7 +2191,7 @@ window.addEventListener(
 
 
 /* =========================================================
-   BROWSER BACK / FORWARD
+   HANDLE BROWSER BACK/FORWARD
 ========================================================= */
 
 window.addEventListener(
@@ -2404,18 +2242,15 @@ window.addEventListener(
 
 
         const position =
-            target
-                .getBoundingClientRect()
+            target.getBoundingClientRect()
                 .top +
             window.scrollY -
             headerHeight;
 
 
         window.scrollTo({
-            top:
-                position,
-            behavior:
-                "smooth"
+            top: position,
+            behavior: "smooth"
         });
 
     }
@@ -2431,29 +2266,26 @@ document.addEventListener(
     () => {
 
         if (
-            document.visibilityState !==
+            document.visibilityState ===
             "visible"
         ) {
 
-            return;
-
-        }
-
-
-        const header =
-            document.getElementById(
-                "header"
-            );
+            const header =
+                document.getElementById(
+                    "header"
+                );
 
 
-        if (
-            header &&
-            window.scrollY > 40
-        ) {
+            if (
+                header &&
+                window.scrollY > 40
+            ) {
 
-            header.classList.add(
-                "scrolled"
-            );
+                header.classList.add(
+                    "scrolled"
+                );
+
+            }
 
         }
 
@@ -2475,8 +2307,7 @@ document.addEventListener(
 
         if (
             element &&
-            element.tagName ===
-                "IMG"
+            element.tagName === "IMG"
         ) {
 
             element.classList.add(
@@ -2517,47 +2348,42 @@ function protectExternalLinks() {
                 ) || "";
 
 
-            const values =
-                rel
-                    .split(/\s+/)
-                    .filter(Boolean);
-
-
             if (
-                !values.includes(
+                !rel.includes(
                     "noopener"
                 )
             ) {
 
-                values.push(
-                    "noopener"
-                );
+                rel +=
+                    " noopener";
 
             }
 
 
             if (
-                !values.includes(
+                !rel.includes(
                     "noreferrer"
                 )
             ) {
 
-                values.push(
-                    "noreferrer"
-                );
+                rel +=
+                    " noreferrer";
 
             }
 
 
             link.setAttribute(
                 "rel",
-                values.join(" ")
+                rel.trim()
             );
 
         }
     );
 
 }
+
+
+protectExternalLinks();
 
 
 /* =========================================================

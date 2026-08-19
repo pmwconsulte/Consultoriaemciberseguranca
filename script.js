@@ -1,16 +1,400 @@
-/* =====================================================
-   PEDRO WENG CYBERSECURITY WEBSITE
-   SCRIPT.JS
-===================================================== */
+/* =========================================================
+   PEDRO WENG - CYBERSECURITY WEBSITE
+   MAIN JAVASCRIPT
+   ========================================================= */
+
+"use strict";
+
+
+/* =========================================================
+   DOM READY
+========================================================= */
 
 document.addEventListener("DOMContentLoaded", () => {
 
-    /* =================================================
-       ELEMENTS
-    ================================================= */
+    /* -----------------------------------------------------
+       INITIALIZE ALL FEATURES
+    ----------------------------------------------------- */
 
-    const header =
-        document.getElementById("header");
+    initLanguageSwitcher();
+    initMobileMenu();
+    initHeaderScroll();
+    initSmoothScrolling();
+    initRevealAnimations();
+    initActiveNavigation();
+    initVideoFilters();
+    initVideoModal();
+    initBackToTop();
+    initContactForm();
+    initKeyboardAccessibility();
+
+    /* -----------------------------------------------------
+       RESTORE SAVED LANGUAGE
+    ----------------------------------------------------- */
+
+    const savedLanguage =
+        localStorage.getItem("preferredLanguage") || "en";
+
+    setLanguage(savedLanguage);
+
+});
+
+
+/* =========================================================
+   GLOBAL VARIABLES
+========================================================= */
+
+let currentLanguage = "en";
+
+const SUPPORTED_LANGUAGES = ["en", "pt"];
+
+
+/* =========================================================
+   LANGUAGE SWITCHER
+========================================================= */
+
+function initLanguageSwitcher() {
+
+    const languageButtons =
+        document.querySelectorAll(".language-btn");
+
+    if (!languageButtons.length) {
+        return;
+    }
+
+    languageButtons.forEach(button => {
+
+        button.addEventListener("click", () => {
+
+            const language =
+                button.dataset.language;
+
+            if (!SUPPORTED_LANGUAGES.includes(language)) {
+                return;
+            }
+
+            setLanguage(language);
+
+        });
+
+    });
+
+}
+
+
+/* =========================================================
+   SET LANGUAGE
+========================================================= */
+
+function setLanguage(language) {
+
+    if (!SUPPORTED_LANGUAGES.includes(language)) {
+        language = "en";
+    }
+
+    currentLanguage = language;
+
+    /* -----------------------------------------------------
+       UPDATE TEXT ELEMENTS
+    ----------------------------------------------------- */
+
+    const translatableElements =
+        document.querySelectorAll("[data-en][data-pt]");
+
+    translatableElements.forEach(element => {
+
+        const translatedText =
+            element.dataset[language];
+
+        if (translatedText === undefined) {
+            return;
+        }
+
+        /*
+         * For normal elements we use textContent.
+         * This preserves icons and child elements when needed.
+         */
+
+        if (element.children.length === 0) {
+
+            element.textContent = translatedText;
+
+        } else {
+
+            /*
+             * Some elements contain icons.
+             * Only replace text when the element itself
+             * is intended to be a simple text container.
+             */
+
+            const tagName =
+                element.tagName.toLowerCase();
+
+            if (
+                tagName === "h1" ||
+                tagName === "h2" ||
+                tagName === "h3" ||
+                tagName === "h4" ||
+                tagName === "h5" ||
+                tagName === "h6" ||
+                tagName === "p" ||
+                tagName === "span" ||
+                tagName === "a" ||
+                tagName === "strong" ||
+                tagName === "small"
+            ) {
+
+                /*
+                 * If the element contains an icon,
+                 * update only its text nodes.
+                 */
+
+                const hasIcon =
+                    element.querySelector("i");
+
+                if (!hasIcon) {
+
+                    element.textContent =
+                        translatedText;
+
+                }
+
+            }
+
+        }
+
+    });
+
+
+    /* -----------------------------------------------------
+       UPDATE SELECT OPTIONS
+    ----------------------------------------------------- */
+
+    updateSelectOptions(language);
+
+
+    /* -----------------------------------------------------
+       UPDATE FORM PLACEHOLDERS
+    ----------------------------------------------------- */
+
+    updateFormPlaceholders(language);
+
+
+    /* -----------------------------------------------------
+       UPDATE VIDEO MODAL TITLE
+    ----------------------------------------------------- */
+
+    updateVideoModalLanguage();
+
+
+    /* -----------------------------------------------------
+       UPDATE HTML LANGUAGE
+    ----------------------------------------------------- */
+
+    document.documentElement.lang =
+        language === "pt" ? "pt" : "en";
+
+
+    /* -----------------------------------------------------
+       UPDATE PAGE TITLE
+    ----------------------------------------------------- */
+
+    updatePageTitle(language);
+
+
+    /* -----------------------------------------------------
+       UPDATE META DESCRIPTION
+    ----------------------------------------------------- */
+
+    updateMetaDescription(language);
+
+
+    /* -----------------------------------------------------
+       UPDATE LANGUAGE BUTTONS
+    ----------------------------------------------------- */
+
+    updateLanguageButtons(language);
+
+
+    /* -----------------------------------------------------
+       SAVE LANGUAGE
+    ----------------------------------------------------- */
+
+    localStorage.setItem(
+        "preferredLanguage",
+        language
+    );
+
+
+    /* -----------------------------------------------------
+       DISPATCH CUSTOM EVENT
+    ----------------------------------------------------- */
+
+    document.dispatchEvent(
+        new CustomEvent("languageChanged", {
+            detail: {
+                language: language
+            }
+        })
+    );
+
+}
+
+
+/* =========================================================
+   UPDATE LANGUAGE BUTTONS
+========================================================= */
+
+function updateLanguageButtons(language) {
+
+    const buttons =
+        document.querySelectorAll(".language-btn");
+
+    buttons.forEach(button => {
+
+        const buttonLanguage =
+            button.dataset.language;
+
+        const isActive =
+            buttonLanguage === language;
+
+        button.classList.toggle(
+            "active",
+            isActive
+        );
+
+        button.setAttribute(
+            "aria-pressed",
+            String(isActive)
+        );
+
+    });
+
+}
+
+
+/* =========================================================
+   UPDATE SELECT OPTIONS
+========================================================= */
+
+function updateSelectOptions(language) {
+
+    const options =
+        document.querySelectorAll(
+            "#subject option[data-en][data-pt]"
+        );
+
+    options.forEach(option => {
+
+        const text =
+            option.dataset[language];
+
+        if (text) {
+
+            option.textContent = text;
+
+        }
+
+    });
+
+}
+
+
+/* =========================================================
+   UPDATE FORM PLACEHOLDERS
+========================================================= */
+
+function updateFormPlaceholders(language) {
+
+    const inputs =
+        document.querySelectorAll(
+            "[data-placeholder-en][data-placeholder-pt]"
+        );
+
+    inputs.forEach(input => {
+
+        const placeholder =
+            input.dataset[
+                `placeholder-${language}`
+            ];
+
+        if (placeholder) {
+
+            input.placeholder =
+                placeholder;
+
+        }
+
+    });
+
+}
+
+
+/* =========================================================
+   PAGE TITLE
+========================================================= */
+
+function updatePageTitle(language) {
+
+    const title =
+        document.getElementById("page-title");
+
+    if (!title) {
+        return;
+    }
+
+    if (language === "pt") {
+
+        title.textContent =
+            "Pedro Weng | Engenheiro Sénior de Cibersegurança";
+
+    } else {
+
+        title.textContent =
+            "Pedro Weng | Senior Cybersecurity Engineer";
+
+    }
+
+}
+
+
+/* =========================================================
+   META DESCRIPTION
+========================================================= */
+
+function updateMetaDescription(language) {
+
+    const description =
+        document.getElementById("page-description");
+
+    if (!description) {
+        return;
+    }
+
+    if (language === "pt") {
+
+        description.setAttribute(
+            "content",
+            "Pedro Weng - Engenheiro Sénior de Cibersegurança e Consultor de Segurança da Informação especializado em SOC, SIEM, Resposta a Incidentes, Segurança na Nuvem e Gestão de Risco Cibernético."
+        );
+
+    } else {
+
+        description.setAttribute(
+            "content",
+            "Pedro Weng - Senior Cybersecurity Engineer and Information Security Consultant specializing in SOC, SIEM, Incident Response, Cloud Security and Cyber Risk Management."
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   MOBILE MENU
+========================================================= */
+
+function initMobileMenu() {
 
     const menuToggle =
         document.getElementById("menu-toggle");
@@ -18,213 +402,50 @@ document.addEventListener("DOMContentLoaded", () => {
     const nav =
         document.getElementById("nav");
 
-    const backToTop =
-        document.getElementById("back-to-top");
-
-    const videoModal =
-        document.getElementById("video-modal");
-
-    const videoPlayer =
-        document.getElementById("video-player");
-
-    const videoModalTitle =
-        document.getElementById("video-modal-title");
-
-    const videoModalClose =
-        document.getElementById("video-modal-close");
-
-    const languageButtons =
-        document.querySelectorAll(".language-btn");
-
-    const form =
-        document.getElementById("contact-form");
-
-    const formStatus =
-        document.getElementById("form-status");
-
-    const submitButton =
-        document.getElementById("submit-button");
-
-
-    /* =================================================
-       LANGUAGE
-    ================================================= */
-
-    let currentLanguage =
-        localStorage.getItem("website-language") || "en";
-
-
-    function translatePage(language) {
-
-        currentLanguage = language;
-
-        document.documentElement.lang = language;
-
-        localStorage.setItem(
-            "website-language",
-            language
-        );
-
-
-        /* ---------------------------------------------
-           NORMAL TEXT
-        --------------------------------------------- */
-
-        document.querySelectorAll(
-            "[data-en][data-pt]"
-        ).forEach(element => {
-
-            const translation =
-                language === "pt"
-                    ? element.getAttribute("data-pt")
-                    : element.getAttribute("data-en");
-
-            if (translation !== null) {
-                element.textContent = translation;
-            }
-
-        });
-
-
-        /* ---------------------------------------------
-           INPUT PLACEHOLDERS
-        --------------------------------------------- */
-
-        document.querySelectorAll(
-            "[data-placeholder-en][data-placeholder-pt]"
-        ).forEach(element => {
-
-            element.placeholder =
-                language === "pt"
-                    ? element.getAttribute("data-placeholder-pt")
-                    : element.getAttribute("data-placeholder-en");
-
-        });
-
-
-        /* ---------------------------------------------
-           SELECT OPTIONS
-        --------------------------------------------- */
-
-        document.querySelectorAll(
-            "select option[data-en][data-pt]"
-        ).forEach(option => {
-
-            option.textContent =
-                language === "pt"
-                    ? option.getAttribute("data-pt")
-                    : option.getAttribute("data-en");
-
-        });
-
-
-        /* ---------------------------------------------
-           LANGUAGE BUTTONS
-        --------------------------------------------- */
-
-        languageButtons.forEach(button => {
-
-            const isActive =
-                button.dataset.language === language;
-
-            button.classList.toggle(
-                "active",
-                isActive
-            );
-
-        });
-
-
-        /* ---------------------------------------------
-           PAGE TITLE
-        --------------------------------------------- */
-
-        const pageTitle =
-            document.getElementById("page-title");
-
-        const pageDescription =
-            document.getElementById("page-description");
-
-
-        if (pageTitle) {
-
-            pageTitle.textContent =
-                language === "pt"
-                    ? "Pedro Weng | Engenheiro Sénior de Cibersegurança"
-                    : "Pedro Weng | Senior Cybersecurity Engineer";
-
-        }
-
-
-        if (pageDescription) {
-
-            pageDescription.setAttribute(
-                "content",
-
-                language === "pt"
-
-                    ? "Pedro Weng - Engenheiro Sénior de Cibersegurança e Consultor de Segurança da Informação especializado em SOC, SIEM, Resposta a Incidentes, Segurança na Nuvem e Gestão de Risco Cibernético."
-
-                    : "Pedro Weng - Senior Cybersecurity Engineer and Information Security Consultant specializing in SOC, SIEM, Incident Response, Cloud Security and Cyber Risk Management."
-            );
-
-        }
-
-
-        /* ---------------------------------------------
-           ARIA LABELS
-        --------------------------------------------- */
-
-        if (menuToggle) {
-
-            menuToggle.setAttribute(
-                "aria-label",
-
-                language === "pt"
-                    ? "Abrir menu de navegação"
-                    : "Open navigation menu"
-            );
-
-        }
-
-
-        if (videoModalClose) {
-
-            videoModalClose.setAttribute(
-                "aria-label",
-
-                language === "pt"
-                    ? "Fechar vídeo"
-                    : "Close video"
-            );
-
-        }
-
-
-        if (backToTop) {
-
-            backToTop.setAttribute(
-                "aria-label",
-
-                language === "pt"
-                    ? "Voltar ao topo"
-                    : "Back to top"
-            );
-
-        }
-
+    if (!menuToggle || !nav) {
+        return;
     }
 
+    menuToggle.addEventListener(
+        "click",
+        () => {
 
-    languageButtons.forEach(button => {
+            const isOpen =
+                nav.classList.toggle("active");
 
-        button.addEventListener(
+            menuToggle.classList.toggle(
+                "active",
+                isOpen
+            );
+
+            menuToggle.setAttribute(
+                "aria-expanded",
+                String(isOpen)
+            );
+
+            updateMenuIcon(
+                menuToggle,
+                isOpen
+            );
+
+        }
+    );
+
+
+    /* -----------------------------------------------------
+       CLOSE MENU WHEN CLICKING NAV LINK
+    ----------------------------------------------------- */
+
+    const navLinks =
+        nav.querySelectorAll("a");
+
+    navLinks.forEach(link => {
+
+        link.addEventListener(
             "click",
             () => {
 
-                translatePage(
-                    button.dataset.language
-                );
+                closeMobileMenu();
 
             }
         );
@@ -232,201 +453,453 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
 
-    /* Initialize language */
+    /* -----------------------------------------------------
+       CLOSE WHEN CLICKING OUTSIDE
+    ----------------------------------------------------- */
 
-    translatePage(currentLanguage);
+    document.addEventListener(
+        "click",
+        event => {
+
+            if (
+                !nav.contains(event.target) &&
+                !menuToggle.contains(event.target)
+            ) {
+
+                closeMobileMenu();
+
+            }
+
+        }
+    );
+
+}
 
 
-    /* =================================================
-       MOBILE MENU
-    ================================================= */
+/* =========================================================
+   CLOSE MOBILE MENU
+========================================================= */
 
-    if (menuToggle && nav) {
+function closeMobileMenu() {
 
-        menuToggle.addEventListener(
-            "click",
-            () => {
+    const menuToggle =
+        document.getElementById("menu-toggle");
 
-                const isOpen =
-                    nav.classList.toggle("active");
+    const nav =
+        document.getElementById("nav");
 
-                menuToggle.setAttribute(
-                    "aria-expanded",
-                    isOpen
+    if (!menuToggle || !nav) {
+        return;
+    }
+
+    nav.classList.remove("active");
+
+    menuToggle.classList.remove(
+        "active"
+    );
+
+    menuToggle.setAttribute(
+        "aria-expanded",
+        "false"
+    );
+
+    updateMenuIcon(
+        menuToggle,
+        false
+    );
+
+}
+
+
+/* =========================================================
+   MENU ICON
+========================================================= */
+
+function updateMenuIcon(
+    menuToggle,
+    isOpen
+) {
+
+    const icon =
+        menuToggle.querySelector("i");
+
+    if (!icon) {
+        return;
+    }
+
+    if (isOpen) {
+
+        icon.classList.remove(
+            "fa-bars"
+        );
+
+        icon.classList.add(
+            "fa-xmark"
+        );
+
+    } else {
+
+        icon.classList.remove(
+            "fa-xmark"
+        );
+
+        icon.classList.add(
+            "fa-bars"
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   HEADER SCROLL EFFECT
+========================================================= */
+
+function initHeaderScroll() {
+
+    const header =
+        document.getElementById("header");
+
+    if (!header) {
+        return;
+    }
+
+    const handleScroll =
+        () => {
+
+            if (window.scrollY > 40) {
+
+                header.classList.add(
+                    "scrolled"
                 );
 
-                menuToggle.innerHTML =
-                    isOpen
-                        ? '<i class="fa-solid fa-xmark"></i>'
-                        : '<i class="fa-solid fa-bars"></i>';
+            } else {
+
+                header.classList.remove(
+                    "scrolled"
+                );
+
+            }
+
+        };
+
+
+    window.addEventListener(
+        "scroll",
+        handleScroll,
+        {
+            passive: true
+        }
+    );
+
+
+    handleScroll();
+
+}
+
+
+/* =========================================================
+   SMOOTH SCROLLING
+========================================================= */
+
+function initSmoothScrolling() {
+
+    const links =
+        document.querySelectorAll(
+            'a[href^="#"]'
+        );
+
+    links.forEach(link => {
+
+        link.addEventListener(
+            "click",
+            event => {
+
+                const href =
+                    link.getAttribute("href");
+
+                if (
+                    !href ||
+                    href === "#"
+                ) {
+                    return;
+                }
+
+                const target =
+                    document.querySelector(href);
+
+                if (!target) {
+                    return;
+                }
+
+                event.preventDefault();
+
+                const header =
+                    document.getElementById(
+                        "header"
+                    );
+
+                const headerHeight =
+                    header
+                        ? header.offsetHeight
+                        : 0;
+
+                const targetPosition =
+                    target.getBoundingClientRect()
+                        .top +
+                    window.scrollY -
+                    headerHeight;
+
+                window.scrollTo({
+                    top: targetPosition,
+                    behavior: "smooth"
+                });
+
+                /*
+                 * Update URL without jumping.
+                 */
+
+                try {
+
+                    history.pushState(
+                        null,
+                        "",
+                        href
+                    );
+
+                } catch (error) {
+
+                    console.warn(
+                        "Unable to update URL:",
+                        error
+                    );
+
+                }
 
             }
         );
 
+    });
 
-        /* Close menu after navigation */
+}
 
-        nav.querySelectorAll("a").forEach(link => {
 
-            link.addEventListener(
-                "click",
-                () => {
+/* =========================================================
+   REVEAL ANIMATIONS
+========================================================= */
 
-                    nav.classList.remove("active");
+function initRevealAnimations() {
 
-                    menuToggle.setAttribute(
-                        "aria-expanded",
-                        "false"
-                    );
+    const revealElements =
+        document.querySelectorAll(
+            ".reveal"
+        );
 
-                    menuToggle.innerHTML =
-                        '<i class="fa-solid fa-bars"></i>';
-
-                }
-            );
-
-        });
-
+    if (!revealElements.length) {
+        return;
     }
 
 
-    /* =================================================
-       HEADER SCROLL EFFECT
-    ================================================= */
+    /* -----------------------------------------------------
+       REDUCED MOTION
+    ----------------------------------------------------- */
 
-    function handleHeader() {
+    const prefersReducedMotion =
+        window.matchMedia(
+            "(prefers-reduced-motion: reduce)"
+        ).matches;
 
-        if (!header) {
-            return;
-        }
+    if (prefersReducedMotion) {
 
-        header.classList.toggle(
-            "scrolled",
-            window.scrollY > 30
+        revealElements.forEach(
+            element => {
+                element.classList.add(
+                    "visible"
+                );
+            }
+        );
+
+        return;
+    }
+
+
+    /* -----------------------------------------------------
+       INTERSECTION OBSERVER
+    ----------------------------------------------------- */
+
+    if (
+        "IntersectionObserver"
+        in window
+    ) {
+
+        const observer =
+            new IntersectionObserver(
+                entries => {
+
+                    entries.forEach(
+                        entry => {
+
+                            if (
+                                entry.isIntersecting
+                            ) {
+
+                                entry.target.classList.add(
+                                    "visible"
+                                );
+
+                                observer.unobserve(
+                                    entry.target
+                                );
+
+                            }
+
+                        }
+                    );
+
+                },
+                {
+                    threshold: 0.12,
+                    rootMargin:
+                        "0px 0px -50px 0px"
+                }
+            );
+
+
+        revealElements.forEach(
+            element => {
+                observer.observe(
+                    element
+                );
+            }
+        );
+
+    } else {
+
+        revealElements.forEach(
+            element => {
+                element.classList.add(
+                    "visible"
+                );
+            }
         );
 
     }
 
-    window.addEventListener(
-        "scroll",
-        handleHeader,
-        { passive: true }
-    );
-
-    handleHeader();
+}
 
 
-    /* =================================================
-       REVEAL ANIMATIONS
-    ================================================= */
+/* =========================================================
+   ACTIVE NAVIGATION
+========================================================= */
 
-    const revealElements =
-        document.querySelectorAll(".reveal");
+function initActiveNavigation() {
+
+    const sections =
+        document.querySelectorAll(
+            "main section[id]"
+        );
+
+    const navLinks =
+        document.querySelectorAll(
+            ".nav a[href^='#']"
+        );
+
+    if (
+        !sections.length ||
+        !navLinks.length
+    ) {
+        return;
+    }
 
 
-    if ("IntersectionObserver" in window) {
+    const setActiveLink =
+        sectionId => {
 
-        const revealObserver =
-            new IntersectionObserver(
-                entries => {
+            navLinks.forEach(link => {
 
-                    entries.forEach(entry => {
+                const href =
+                    link.getAttribute(
+                        "href"
+                    );
 
-                        if (entry.isIntersecting) {
+                const isActive =
+                    href ===
+                    `#${sectionId}`;
 
-                            entry.target.classList.add(
-                                "visible"
-                            );
+                link.classList.toggle(
+                    "active",
+                    isActive
+                );
 
-                            revealObserver.unobserve(
-                                entry.target
+            });
+
+        };
+
+
+    const observer =
+        new IntersectionObserver(
+            entries => {
+
+                entries.forEach(
+                    entry => {
+
+                        if (
+                            entry.isIntersecting
+                        ) {
+
+                            setActiveLink(
+                                entry.target.id
                             );
 
                         }
 
-                    });
+                    }
+                );
 
-                },
-                {
-                    threshold: 0.12
-                }
-            );
-
-
-        revealElements.forEach(element => {
-
-            revealObserver.observe(element);
-
-        });
-
-    } else {
-
-        revealElements.forEach(element => {
-
-            element.classList.add("visible");
-
-        });
-
-    }
-
-
-    /* =================================================
-       BACK TO TOP
-    ================================================= */
-
-    function handleBackToTop() {
-
-        if (!backToTop) {
-            return;
-        }
-
-        backToTop.classList.toggle(
-            "show",
-            window.scrollY > 500
-        );
-
-    }
-
-
-    window.addEventListener(
-        "scroll",
-        handleBackToTop,
-        { passive: true }
-    );
-
-
-    handleBackToTop();
-
-
-    if (backToTop) {
-
-        backToTop.addEventListener(
-            "click",
-            () => {
-
-                window.scrollTo({
-                    top: 0,
-                    behavior: "smooth"
-                });
-
+            },
+            {
+                rootMargin:
+                    "-35% 0px -55% 0px",
+                threshold: 0
             }
         );
 
+
+    sections.forEach(section => {
+
+        observer.observe(section);
+
+    });
+
+}
+
+
+/* =========================================================
+   VIDEO FILTERS
+========================================================= */
+
+function initVideoFilters() {
+
+    const filters =
+        document.querySelectorAll(
+            ".video-filter"
+        );
+
+    const cards =
+        document.querySelectorAll(
+            ".video-card"
+        );
+
+    if (
+        !filters.length ||
+        !cards.length
+    ) {
+        return;
     }
 
 
-    /* =================================================
-       VIDEO FILTER
-    ================================================= */
-
-    const videoFilters =
-        document.querySelectorAll(".video-filter");
-
-    const videoCards =
-        document.querySelectorAll(".video-card");
-
-
-    videoFilters.forEach(filter => {
+    filters.forEach(filter => {
 
         filter.addEventListener(
             "click",
@@ -435,10 +908,11 @@ document.addEventListener("DOMContentLoaded", () => {
                 const category =
                     filter.dataset.filter;
 
+                /* -------------------------------------------------
+                   UPDATE BUTTON STATE
+                ------------------------------------------------- */
 
-                /* Update buttons */
-
-                videoFilters.forEach(button => {
+                filters.forEach(button => {
 
                     const active =
                         button === filter;
@@ -450,33 +924,70 @@ document.addEventListener("DOMContentLoaded", () => {
 
                     button.setAttribute(
                         "aria-pressed",
-                        active
+                        String(active)
                     );
 
                 });
 
 
-                /* Filter cards */
+                /* -------------------------------------------------
+                   FILTER CARDS
+                ------------------------------------------------- */
 
-                videoCards.forEach(card => {
+                cards.forEach(card => {
 
                     const cardCategory =
                         card.dataset.category;
 
-
-                    if (
+                    const shouldShow =
                         category === "all" ||
-                        cardCategory === category
-                    ) {
+                        cardCategory === category;
+
+                    if (shouldShow) {
 
                         card.classList.remove(
-                            "hidden"
+                            "video-hidden"
+                        );
+
+                        card.style.display =
+                            "";
+
+                        requestAnimationFrame(
+                            () => {
+
+                                card.classList.add(
+                                    "video-filter-visible"
+                                );
+
+                            }
                         );
 
                     } else {
 
+                        card.classList.remove(
+                            "video-filter-visible"
+                        );
+
                         card.classList.add(
-                            "hidden"
+                            "video-hidden"
+                        );
+
+                        setTimeout(
+                            () => {
+
+                                if (
+                                    card.classList.contains(
+                                        "video-hidden"
+                                    )
+                                ) {
+
+                                    card.style.display =
+                                        "none";
+
+                                }
+
+                            },
+                            250
                         );
 
                     }
@@ -488,381 +999,1257 @@ document.addEventListener("DOMContentLoaded", () => {
 
     });
 
+}
 
-    /* =================================================
-       YOUTUBE VIDEO MODAL
-    ================================================= */
+
+/* =========================================================
+   VIDEO MODAL
+========================================================= */
+
+function initVideoModal() {
+
+    const modal =
+        document.getElementById(
+            "video-modal"
+        );
+
+    const closeButton =
+        document.getElementById(
+            "video-modal-close"
+        );
+
+    const iframe =
+        document.getElementById(
+            "video-player"
+        );
+
+    const title =
+        document.getElementById(
+            "video-modal-title"
+        );
 
     const playButtons =
-        document.querySelectorAll(".play-button");
-
-
-    function openVideo(button) {
-
-        if (!videoModal || !videoPlayer) {
-            return;
-        }
-
-
-        const videoId =
-            button.dataset.video;
-
-
-        if (
-            !videoId ||
-            videoId.startsWith("YOUR_VIDEO_ID")
-        ) {
-
-            alert(
-                currentLanguage === "pt"
-                    ? "Adicione primeiro o ID do vídeo do YouTube."
-                    : "Please add the YouTube video ID first."
-            );
-
-            return;
-
-        }
-
-
-        const title =
-            currentLanguage === "pt"
-                ? button.dataset.titlePt
-                : button.dataset.titleEn;
-
-
-        videoModalTitle.textContent =
-            title || "Cybersecurity Training";
-
-
-        videoPlayer.src =
-            `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0`;
-
-
-        videoModal.classList.add("active");
-
-        videoModal.setAttribute(
-            "aria-hidden",
-            "false"
+        document.querySelectorAll(
+            ".play-button"
         );
 
-        document.body.classList.add(
-            "modal-open"
-        );
-
+    if (
+        !modal ||
+        !closeButton ||
+        !iframe ||
+        !title
+    ) {
+        return;
     }
 
 
-    function closeVideo() {
-
-        if (!videoModal || !videoPlayer) {
-            return;
-        }
-
-
-        videoPlayer.src = "";
-
-        videoModal.classList.remove(
-            "active"
-        );
-
-        videoModal.setAttribute(
-            "aria-hidden",
-            "true"
-        );
-
-        document.body.classList.remove(
-            "modal-open"
-        );
-
-    }
-
+    /* -----------------------------------------------------
+       PLAY BUTTONS
+    ----------------------------------------------------- */
 
     playButtons.forEach(button => {
 
         button.addEventListener(
             "click",
-            () => openVideo(button)
+            () => {
+
+                const videoId =
+                    button.dataset.video;
+
+                const titleEn =
+                    button.dataset.titleEn ||
+                    "Cybersecurity Training";
+
+                const titlePt =
+                    button.dataset.titlePt ||
+                    "Formação em Cibersegurança";
+
+
+                /* -------------------------------------------------
+                   VALIDATE VIDEO ID
+                ------------------------------------------------- */
+
+                if (
+                    !videoId ||
+                    videoId.startsWith(
+                        "YOUR_VIDEO_ID"
+                    )
+                ) {
+
+                    showVideoUnavailableMessage();
+
+                    return;
+
+                }
+
+
+                /* -------------------------------------------------
+                   SET MODAL TITLE
+                ------------------------------------------------- */
+
+                title.dataset.titleEn =
+                    titleEn;
+
+                title.dataset.titlePt =
+                    titlePt;
+
+                title.textContent =
+                    currentLanguage === "pt"
+                        ? titlePt
+                        : titleEn;
+
+
+                /* -------------------------------------------------
+                   YOUTUBE URL
+                ------------------------------------------------- */
+
+                iframe.src =
+                    `https://www.youtube.com/embed/${encodeURIComponent(
+                        videoId
+                    )}?autoplay=1&rel=0`;
+
+
+                /* -------------------------------------------------
+                   OPEN MODAL
+                ------------------------------------------------- */
+
+                modal.classList.add(
+                    "active"
+                );
+
+                modal.setAttribute(
+                    "aria-hidden",
+                    "false"
+                );
+
+                document.body.classList.add(
+                    "modal-open"
+                );
+
+
+                /* -------------------------------------------------
+                   FOCUS CLOSE BUTTON
+                ------------------------------------------------- */
+
+                setTimeout(
+                    () => {
+                        closeButton.focus();
+                    },
+                    100
+                );
+
+            }
         );
 
     });
 
 
-    if (videoModalClose) {
+    /* -----------------------------------------------------
+       CLOSE BUTTON
+    ----------------------------------------------------- */
 
-        videoModalClose.addEventListener(
-            "click",
-            closeVideo
-        );
-
-    }
-
-
-    if (videoModal) {
-
-        videoModal.addEventListener(
-            "click",
-            event => {
-
-                if (
-                    event.target === videoModal
-                ) {
-
-                    closeVideo();
-
-                }
-
-            }
-        );
-
-    }
+    closeButton.addEventListener(
+        "click",
+        closeVideoModal
+    );
 
 
-    document.addEventListener(
-        "keydown",
+    /* -----------------------------------------------------
+       CLICK OUTSIDE MODAL
+    ----------------------------------------------------- */
+
+    modal.addEventListener(
+        "click",
         event => {
 
             if (
-                event.key === "Escape" &&
-                videoModal &&
-                videoModal.classList.contains("active")
+                event.target === modal
             ) {
 
-                closeVideo();
+                closeVideoModal();
 
             }
 
         }
     );
 
-
-    /* =================================================
-       FORMINIT CONTACT FORM
-    ================================================= */
-
-    if (form) {
-
-        const forminit =
-            new Forminit();
-
-        const FORM_ID =
-            "64ep4stw8gq";
+}
 
 
-        form.addEventListener(
-            "submit",
-            async event => {
+/* =========================================================
+   CLOSE VIDEO MODAL
+========================================================= */
 
-                event.preventDefault();
+function closeVideoModal() {
 
+    const modal =
+        document.getElementById(
+            "video-modal"
+        );
 
-                if (formStatus) {
+    const iframe =
+        document.getElementById(
+            "video-player"
+        );
 
-                    formStatus.textContent =
-                        currentLanguage === "pt"
-                            ? "A enviar..."
-                            : "Sending...";
+    if (!modal) {
+        return;
+    }
 
-                    formStatus.className =
-                        "form-status";
+    modal.classList.remove(
+        "active"
+    );
 
-                }
-
-
-                if (submitButton) {
-
-                    submitButton.disabled =
-                        true;
-
-                }
-
-
-                try {
-
-                    const formData =
-                        new FormData(form);
+    modal.setAttribute(
+        "aria-hidden",
+        "true"
+    );
 
 
-                    const {
-                        data,
-                        error
-                    } =
-                        await forminit.submit(
-                            FORM_ID,
-                            formData
-                        );
+    /* -----------------------------------------------------
+       STOP YOUTUBE VIDEO
+    ----------------------------------------------------- */
+
+    if (iframe) {
+
+        iframe.src = "";
+
+    }
 
 
-                    if (error) {
+    document.body.classList.remove(
+        "modal-open"
+    );
 
-                        console.error(
-                            "Forminit error:",
-                            error
-                        );
-
-
-                        if (formStatus) {
-
-                            formStatus.textContent =
-                                error.message ||
-                                (
-                                    currentLanguage === "pt"
-                                        ? "Não foi possível enviar a sua mensagem. Tente novamente."
-                                        : "Unable to send your message. Please try again."
-                                );
-
-                            formStatus.className =
-                                "form-status status-error";
-
-                        }
-
-                        return;
-
-                    }
+}
 
 
-                    console.log(
-                        "Form submitted:",
-                        data
-                    );
+/* =========================================================
+   VIDEO UNAVAILABLE MESSAGE
+========================================================= */
+
+function showVideoUnavailableMessage() {
+
+    const messageEn =
+        "This video is not available yet.";
+
+    const messagePt =
+        "Este vídeo ainda não está disponível.";
+
+    const message =
+        currentLanguage === "pt"
+            ? messagePt
+            : messageEn;
+
+    /*
+     * Use the browser alert only as a fallback.
+     * Replace with your own notification component
+     * if you already have one in CSS.
+     */
+
+    alert(message);
+
+}
 
 
-                    if (formStatus) {
+/* =========================================================
+   UPDATE VIDEO MODAL LANGUAGE
+========================================================= */
 
-                        formStatus.textContent =
-                            currentLanguage === "pt"
-                                ? "Mensagem enviada com sucesso! Obrigado por entrar em contacto."
-                                : "Message sent successfully! Thank you for contacting me.";
+function updateVideoModalLanguage() {
 
-                        formStatus.className =
-                            "form-status status-success";
+    const title =
+        document.getElementById(
+            "video-modal-title"
+        );
 
-                    }
+    if (!title) {
+        return;
+    }
 
+    if (
+        title.dataset.titleEn &&
+        title.dataset.titlePt
+    ) {
 
-                    form.reset();
+        title.textContent =
+            currentLanguage === "pt"
+                ? title.dataset.titlePt
+                : title.dataset.titleEn;
 
+    }
 
-                    /* Restore translated placeholders */
-
-                    translatePage(
-                        currentLanguage
-                    );
-
-
-                } catch (error) {
-
-                    console.error(
-                        "Submission error:",
-                        error
-                    );
+}
 
 
-                    if (formStatus) {
+/* =========================================================
+   BACK TO TOP
+========================================================= */
 
-                        formStatus.textContent =
-                            currentLanguage === "pt"
-                                ? "Ocorreu um erro. Tente novamente."
-                                : "Something went wrong. Please try again.";
+function initBackToTop() {
 
-                        formStatus.className =
-                            "form-status status-error";
+    const button =
+        document.getElementById(
+            "back-to-top"
+        );
 
-                    }
+    if (!button) {
+        return;
+    }
 
-                } finally {
 
-                    if (submitButton) {
+    /* -----------------------------------------------------
+       SHOW / HIDE BUTTON
+    ----------------------------------------------------- */
 
-                        submitButton.disabled =
-                            false;
+    const toggleButton =
+        () => {
 
-                    }
+            if (
+                window.scrollY >
+                500
+            ) {
 
-                }
+                button.classList.add(
+                    "visible"
+                );
+
+            } else {
+
+                button.classList.remove(
+                    "visible"
+                );
 
             }
+
+        };
+
+
+    window.addEventListener(
+        "scroll",
+        toggleButton,
+        {
+            passive: true
+        }
+    );
+
+
+    toggleButton();
+
+
+    /* -----------------------------------------------------
+       SCROLL TO TOP
+    ----------------------------------------------------- */
+
+    button.addEventListener(
+        "click",
+        () => {
+
+            window.scrollTo({
+                top: 0,
+                behavior: "smooth"
+            });
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   CONTACT FORM
+========================================================= */
+
+function initContactForm() {
+
+    const form =
+        document.getElementById(
+            "contact-form"
+        );
+
+    if (!form) {
+        return;
+    }
+
+    form.addEventListener(
+        "submit",
+        handleContactFormSubmit
+    );
+
+}
+
+
+/* =========================================================
+   CONTACT FORM SUBMISSION
+========================================================= */
+
+async function handleContactFormSubmit(
+    event
+) {
+
+    event.preventDefault();
+
+    const form =
+        event.currentTarget;
+
+    const submitButton =
+        document.getElementById(
+            "submit-button"
+        );
+
+    const status =
+        document.getElementById(
+            "form-status"
+        );
+
+
+    if (!form) {
+        return;
+    }
+
+
+    /* -----------------------------------------------------
+       VALIDATE FORM
+    ----------------------------------------------------- */
+
+    if (
+        !validateContactForm(form)
+    ) {
+
+        setFormStatus(
+            getTranslation(
+                "Please complete all required fields correctly.",
+                "Preencha corretamente todos os campos obrigatórios."
+            ),
+            "error"
+        );
+
+        return;
+
+    }
+
+
+    /* -----------------------------------------------------
+       PREVENT DOUBLE SUBMISSION
+    ----------------------------------------------------- */
+
+    if (
+        submitButton &&
+        submitButton.disabled
+    ) {
+
+        return;
+
+    }
+
+
+    setSubmitButtonLoading(
+        true
+    );
+
+
+    setFormStatus(
+        getTranslation(
+            "Sending your message...",
+            "A enviar a sua mensagem..."
+        ),
+        "loading"
+    );
+
+
+    try {
+
+        /*
+         * Forminit SDK
+         *
+         * The HTML already loads:
+         *
+         * https://forminit.com/sdk/v1/forminit.js
+         *
+         * We first attempt to use the Forminit SDK.
+         */
+
+        const result =
+            await submitToForminit(form);
+
+
+        if (
+            result &&
+            result.success
+        ) {
+
+            setFormStatus(
+                getTranslation(
+                    "Thank you! Your message has been sent successfully.",
+                    "Obrigado! A sua mensagem foi enviada com sucesso."
+                ),
+                "success"
+            );
+
+
+            form.reset();
+
+
+            /*
+             * Restore current language placeholders
+             * after form.reset().
+             */
+
+            updateFormPlaceholders(
+                currentLanguage
+            );
+
+
+        } else {
+
+            throw new Error(
+                "Form submission failed."
+            );
+
+        }
+
+    } catch (error) {
+
+        console.error(
+            "Contact form error:",
+            error
+        );
+
+
+        setFormStatus(
+            getTranslation(
+                "Unable to send your message right now. Please try again or contact me directly by email.",
+                "Não foi possível enviar a sua mensagem neste momento. Tente novamente ou contacte-me diretamente por email."
+            ),
+            "error"
+        );
+
+    } finally {
+
+        setSubmitButtonLoading(
+            false
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   FORM VALIDATION
+========================================================= */
+
+function validateContactForm(form) {
+
+    const fullName =
+        document.getElementById(
+            "fullName"
+        );
+
+    const email =
+        document.getElementById(
+            "email"
+        );
+
+    const message =
+        document.getElementById(
+            "message"
+        );
+
+
+    if (
+        !fullName ||
+        !email ||
+        !message
+    ) {
+
+        return false;
+
+    }
+
+
+    const nameValue =
+        fullName.value.trim();
+
+    const emailValue =
+        email.value.trim();
+
+    const messageValue =
+        message.value.trim();
+
+
+    /* -----------------------------------------------------
+       NAME
+    ----------------------------------------------------- */
+
+    if (
+        nameValue.length < 2
+    ) {
+
+        fullName.focus();
+
+        return false;
+
+    }
+
+
+    /* -----------------------------------------------------
+       EMAIL
+    ----------------------------------------------------- */
+
+    if (
+        !isValidEmail(emailValue)
+    ) {
+
+        email.focus();
+
+        return false;
+
+    }
+
+
+    /* -----------------------------------------------------
+       MESSAGE
+    ----------------------------------------------------- */
+
+    if (
+        messageValue.length < 10
+    ) {
+
+        message.focus();
+
+        return false;
+
+    }
+
+
+    return true;
+
+}
+
+
+/* =========================================================
+   EMAIL VALIDATION
+========================================================= */
+
+function isValidEmail(email) {
+
+    const emailPattern =
+        /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    return emailPattern.test(
+        email
+    );
+
+}
+
+
+/* =========================================================
+   FORM INIT / FORMINIT SUBMISSION
+========================================================= */
+
+async function submitToForminit(form) {
+
+    /*
+     * IMPORTANT:
+     *
+     * The exact Forminit SDK method can vary depending
+     * on the Forminit form configuration.
+     *
+     * This function checks for the common SDK interfaces
+     * instead of crashing if the SDK is unavailable.
+     */
+
+
+    /* -----------------------------------------------------
+       OPTION 1 - GLOBAL FORMINIT OBJECT
+    ----------------------------------------------------- */
+
+    if (
+        window.Forminit &&
+        typeof window.Forminit.submit ===
+            "function"
+    ) {
+
+        const response =
+            await window.Forminit.submit(
+                form
+            );
+
+        return normalizeForminitResponse(
+            response
         );
 
     }
 
 
-    /* =================================================
-       SMOOTH SCROLL
-    ================================================= */
+    /* -----------------------------------------------------
+       OPTION 2 - FORMINIT SDK FUNCTION
+    ----------------------------------------------------- */
 
-    document.querySelectorAll(
-        'a[href^="#"]'
-    ).forEach(link => {
+    if (
+        window.forminit &&
+        typeof window.forminit.submit ===
+            "function"
+    ) {
 
-        link.addEventListener(
-            "click",
-            event => {
+        const response =
+            await window.forminit.submit(
+                form
+            );
 
-                const targetId =
-                    link.getAttribute("href");
+        return normalizeForminitResponse(
+            response
+        );
 
-
-                if (
-                    !targetId ||
-                    targetId === "#"
-                ) {
-                    return;
-                }
+    }
 
 
-                const target =
-                    document.querySelector(
-                        targetId
+    /*
+     * If Forminit is not initialized correctly,
+     * throw an error rather than pretending the
+     * message was sent.
+     */
+
+    throw new Error(
+        "Forminit SDK is not available or is not configured."
+    );
+
+}
+
+
+/* =========================================================
+   NORMALIZE FORMINIT RESPONSE
+========================================================= */
+
+function normalizeForminitResponse(
+    response
+) {
+
+    /*
+     * Some SDKs return:
+     *
+     * { success: true }
+     *
+     * or:
+     *
+     * { ok: true }
+     *
+     * or:
+     *
+     * Response-like objects.
+     */
+
+
+    if (
+        response &&
+        response.success === true
+    ) {
+
+        return {
+            success: true,
+            data: response
+        };
+
+    }
+
+
+    if (
+        response &&
+        response.ok === true
+    ) {
+
+        return {
+            success: true,
+            data: response
+        };
+
+    }
+
+
+    if (
+        response &&
+        response.status >= 200 &&
+        response.status < 300
+    ) {
+
+        return {
+            success: true,
+            data: response
+        };
+
+    }
+
+
+    return {
+        success: false,
+        data: response
+    };
+
+}
+
+
+/* =========================================================
+   SUBMIT BUTTON LOADING STATE
+========================================================= */
+
+function setSubmitButtonLoading(
+    loading
+) {
+
+    const button =
+        document.getElementById(
+            "submit-button"
+        );
+
+    if (!button) {
+        return;
+    }
+
+
+    const text =
+        button.querySelector(
+            "span"
+        );
+
+    const icon =
+        button.querySelector(
+            "i"
+        );
+
+
+    if (loading) {
+
+        button.disabled = true;
+
+        button.classList.add(
+            "loading"
+        );
+
+        button.setAttribute(
+            "aria-busy",
+            "true"
+        );
+
+
+        if (text) {
+
+            text.dataset.originalText =
+                text.textContent;
+
+            text.textContent =
+                getTranslation(
+                    "Sending...",
+                    "A enviar..."
+                );
+
+        }
+
+
+        if (icon) {
+
+            icon.classList.remove(
+                "fa-paper-plane"
+            );
+
+            icon.classList.add(
+                "fa-spinner",
+                "fa-spin"
+            );
+
+        }
+
+    } else {
+
+        button.disabled = false;
+
+        button.classList.remove(
+            "loading"
+        );
+
+        button.setAttribute(
+            "aria-busy",
+            "false"
+        );
+
+
+        if (text) {
+
+            text.textContent =
+                getTranslation(
+                    "Send Message",
+                    "Enviar Mensagem"
+                );
+
+        }
+
+
+        if (icon) {
+
+            icon.classList.remove(
+                "fa-spinner",
+                "fa-spin"
+            );
+
+            icon.classList.add(
+                "fa-paper-plane"
+            );
+
+        }
+
+    }
+
+}
+
+
+/* =========================================================
+   FORM STATUS
+========================================================= */
+
+function setFormStatus(
+    message,
+    type
+) {
+
+    const status =
+        document.getElementById(
+            "form-status"
+        );
+
+    if (!status) {
+        return;
+    }
+
+
+    status.textContent =
+        message;
+
+    status.className =
+        "form-status";
+
+
+    if (type) {
+
+        status.classList.add(
+            `form-status-${type}`
+        );
+
+    }
+
+
+    status.setAttribute(
+        "data-state",
+        type || ""
+    );
+
+}
+
+
+/* =========================================================
+   TRANSLATION HELPER
+========================================================= */
+
+function getTranslation(
+    english,
+    portuguese
+) {
+
+    return currentLanguage === "pt"
+        ? portuguese
+        : english;
+
+}
+
+
+/* =========================================================
+   KEYBOARD ACCESSIBILITY
+========================================================= */
+
+function initKeyboardAccessibility() {
+
+    document.addEventListener(
+        "keydown",
+        event => {
+
+            /* -------------------------------------------------
+               ESCAPE
+            ------------------------------------------------- */
+
+            if (
+                event.key === "Escape"
+            ) {
+
+                const modal =
+                    document.getElementById(
+                        "video-modal"
                     );
 
+                if (
+                    modal &&
+                    modal.classList.contains(
+                        "active"
+                    )
+                ) {
 
-                if (!target) {
+                    closeVideoModal();
+
                     return;
+
                 }
 
 
-                event.preventDefault();
-
-
-                const headerHeight =
-                    header
-                        ? header.offsetHeight
-                        : 0;
-
-
-                const targetPosition =
-                    target.getBoundingClientRect().top +
-                    window.scrollY -
-                    headerHeight;
-
-
-                window.scrollTo({
-
-                    top:
-                        targetPosition,
-
-                    behavior:
-                        "smooth"
-
-                });
+                closeMobileMenu();
 
             }
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   RESIZE HANDLER
+========================================================= */
+
+window.addEventListener(
+    "resize",
+    () => {
+
+        /*
+         * If the screen becomes desktop-sized,
+         * automatically close the mobile menu.
+         */
+
+        if (
+            window.innerWidth > 992
+        ) {
+
+            closeMobileMenu();
+
+        }
+
+    }
+);
+
+
+/* =========================================================
+   HANDLE BROWSER BACK/FORWARD
+========================================================= */
+
+window.addEventListener(
+    "popstate",
+    () => {
+
+        const hash =
+            window.location.hash;
+
+        if (!hash) {
+            return;
+        }
+
+        const target =
+            document.querySelector(
+                hash
+            );
+
+        if (!target) {
+            return;
+        }
+
+        const header =
+            document.getElementById(
+                "header"
+            );
+
+        const headerHeight =
+            header
+                ? header.offsetHeight
+                : 0;
+
+        const position =
+            target.getBoundingClientRect()
+                .top +
+            window.scrollY -
+            headerHeight;
+
+        window.scrollTo({
+            top: position,
+            behavior: "smooth"
+        });
+
+    }
+);
+
+
+/* =========================================================
+   PAGE VISIBILITY
+========================================================= */
+
+document.addEventListener(
+    "visibilitychange",
+    () => {
+
+        /*
+         * If the page becomes visible again,
+         * refresh scroll-related UI.
+         */
+
+        if (
+            document.visibilityState ===
+            "visible"
+        ) {
+
+            const header =
+                document.getElementById(
+                    "header"
+                );
+
+            if (
+                header &&
+                window.scrollY > 40
+            ) {
+
+                header.classList.add(
+                    "scrolled"
+                );
+
+            }
+
+        }
+
+    }
+);
+
+
+/* =========================================================
+   IMAGE ERROR HANDLING
+========================================================= */
+
+document.addEventListener(
+    "error",
+    event => {
+
+        const element =
+            event.target;
+
+        if (
+            element &&
+            element.tagName === "IMG"
+        ) {
+
+            element.classList.add(
+                "image-load-error"
+            );
+
+            console.warn(
+                "Image could not be loaded:",
+                element.src
+            );
+
+        }
+
+    },
+    true
+);
+
+
+/* =========================================================
+   EXTERNAL LINKS
+========================================================= */
+
+function protectExternalLinks() {
+
+    const externalLinks =
+        document.querySelectorAll(
+            'a[target="_blank"]'
         );
+
+    externalLinks.forEach(link => {
+
+        const rel =
+            link.getAttribute("rel") || "";
+
+        if (
+            !rel.includes("noopener")
+        ) {
+
+            link.setAttribute(
+                "rel",
+                `${rel} noopener`
+                    .trim()
+            );
+
+        }
+
+        if (
+            !rel.includes("noreferrer")
+        ) {
+
+            link.setAttribute(
+                "rel",
+                `${link.getAttribute("rel")} noreferrer`
+                    .trim()
+            );
+
+        }
 
     });
 
+}
 
-    /* =================================================
-       CONSOLE MESSAGE
-    ================================================= */
+protectExternalLinks();
 
-    console.log(
-        "%cPedro Weng Cybersecurity Website",
-        "color:#22c55e;font-size:18px;font-weight:bold;"
-    );
 
-    console.log(
-        "Website initialized successfully."
-    );
+/* =========================================================
+   CONSOLE BRANDING
+========================================================= */
 
-});
+console.log(
+    "%cPedro Weng | Cybersecurity Engineer",
+    "font-size: 18px; font-weight: bold;"
+);
+
+console.log(
+    "%cSOC • SIEM • Cloud Security • Incident Response",
+    "font-size: 12px;"
+);
+
+
+/* =========================================================
+   GLOBAL ERROR HANDLING
+========================================================= */
+
+window.addEventListener(
+    "error",
+    event => {
+
+        console.error(
+            "Website error:",
+            event.error || event.message
+        );
+
+    }
+);
+
+
+/* =========================================================
+   UNHANDLED PROMISE ERRORS
+========================================================= */
+
+window.addEventListener(
+    "unhandledrejection",
+    event => {
+
+        console.error(
+            "Unhandled promise rejection:",
+            event.reason
+        );
+
+    }
+);
+
+
+/* =========================================================
+   END OF SCRIPT
+========================================================= */
